@@ -1,0 +1,41 @@
+<div class="progress amber" style="margin: 0;" data-ng-show="canParams.loading">
+  <div class="indeterminate amber lighten-4"></div>
+</div>
+
+<div class="row" style="margin-bottom: 0;">
+  <div class="container">
+
+    <div data-ng-if="canParams.error">
+      <h2>There has been an error :(</h2>
+      <p>{{ vehicleDetail.error.message }}</p>
+      <p data-ng-if="canParams.error.exception">{{ vehicleDetail.error.exception }}</p>
+      <pre>{{ vehicleDetail.error | json}}</pre>
+    </div>
+
+    <h1>CAN Parameter</h1>
+
+    <table>
+      <thead>
+      <tr>
+        <th>CODE</th>
+        <th>NAME</th>
+        <th>DESC</th>
+        <th>UNIT</th>
+        <th>DATATYPE</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr data-ng-repeat="canParam in canParams.canParams" data-ng-show="canParam.ACTIVATED === 1">
+        <td>
+          <pre>{{ canParam.CODE }}</pre>
+        </td>
+        <td>{{ canParam.NAMEEN }}</td>
+        <td>{{ canParam.DESCEN }}</td>
+        <td>{{ canParam.UNIT }}</td>
+        <td>{{ canParam.DATATYPE }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

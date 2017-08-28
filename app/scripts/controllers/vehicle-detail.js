@@ -31,7 +31,6 @@ angular.module('amvSystemDemoUi')
       }
 
       (function init() {
-
         self.loading = true;
         self.vehicles = [];
 
@@ -55,7 +54,6 @@ angular.module('amvSystemDemoUi')
 
         var fetchDataAndPopulateLocations = function (vehicleIds) {
           return fetchData(vehicleIds).then(function (dataArray) {
-
             self.vehicles = [];
 
             dataArray.forEach(function (data) {

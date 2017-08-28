@@ -1,12 +1,5 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name amvSystemDemoUi.controller:AboutCtrl
- * @description
- * # AboutCtrl
- * Controller of the amvSystemDemoUi
- */
 angular.module('amvSystemDemoUi')
 .directive('amvVehicleDetail', [function () {
     return {

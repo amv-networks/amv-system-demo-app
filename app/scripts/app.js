@@ -165,15 +165,21 @@ angular
         controller: 'SettingsCtrl',
         controllerAs: 'settings'
       })
+      .state('canparams', {
+        url: '/can-params',
+        templateUrl: 'views/page/can-params.html',
+        controller: 'CanParamsCtrl',
+        controllerAs: 'canParams'
+      })
       .state('vehicle', {
         url: '/vehicle-detail/:id',
         templateUrl: 'views/page/vehicle-detail.html',
         controller: 'VehicleDetailCtrl',
         controllerAs: 'vehicleDetail',
         resolve: {
-            amvVehicleId: ['$stateParams', function($stateParams) {
-              return $stateParams.id;
-            }]
+          amvVehicleId: ['$stateParams', function ($stateParams) {
+            return $stateParams.id;
+          }]
         }
       })
       .state('about', {
