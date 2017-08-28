@@ -6,14 +6,6 @@ var appendPrefixPreventingSubstitutionByGruntReplaceAndUglify = function (value)
 var variableNameThatShouldNotBeReplaced = appendPrefixPreventingSubstitutionByGruntReplaceAndUglify('___ENV_REPLACE_WORKAROUND___');
 var replaceTaskInvoked = variableNameThatShouldNotBeReplaced !== '@@___ENV_REPLACE_WORKAROUND___';
 
-/**
- * @ngdoc overview
- * @name amvSystemDemoUi
- * @description
- * # amvSystemDemoUi
- *
- * Main module of the application.
- */
 angular
   .module('amvSystemDemoUi', [
     'ngAnimate',

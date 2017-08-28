@@ -1,4 +1,3 @@
-/* jshint loopfunc:true */
 'use strict';
 
 angular.module('amvSystemDemoUi')
