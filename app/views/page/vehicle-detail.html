@@ -1,16 +1,18 @@
-<div class="progress amber" style="margin: 0;" data-ng-show="loading">
+<div class="progress amber" style="margin: 0;" data-ng-show="vehicleDetail.loading">
   <div class="indeterminate amber lighten-4"></div>
 </div>
 
 <div class="row" style="margin-bottom: 0;">
   <div class="container">
-    <div data-ng-if="error">
-      There has been an error.
-      <div>{{ vehicleDetails.error }}</div>
+    <div data-ng-if="vehicleDetail.error">
+      <h2>There has been an error :(</h2>
+      <p>{{ vehicleDetail.error.message }}</p>
+      <p data-ng-if="vehicleDetail.error.exception">{{ vehicleDetail.error.exception }}</p>
+      <pre>{{ vehicleDetail.error | json}}</pre>
     </div>
 
 
-    <div data-ng-repeat="vehicle in locations">
+    <div data-ng-repeat="vehicle in vehicleDetail.vehicles">
       <div data-amv-vehicle-detail data-vehicle="vehicle"></div>
     </div>
   </div>

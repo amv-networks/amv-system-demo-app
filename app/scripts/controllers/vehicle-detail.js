@@ -2,19 +2,20 @@
 'use strict';
 
 angular.module('amvSystemDemoUi')
-  .controller('VehicleDetailCtrl', ['$scope', '$log', '$timeout',
+  .controller('VehicleDetailCtrl', ['$log', '$timeout',
     'Materialize', 'amvClientSettings', 'amvXfcdClient', 'amvVehicleId',
-    function ($scope, $log, $timeout, Materialize, amvClientSettings, amvXfcdClient, amvVehicleId) {
-
-      if(!amvVehicleId) {
-          Materialize.toast('`vehicleId` is invalid. Cannot show details.', 2000);
-          $scope.error = '`vehicleId` is invalid. Cannot show details.';
-          return;
-      }
-
+    function ($log, $timeout, Materialize, amvClientSettings, amvXfcdClient, amvVehicleId) {
       var self = this;
 
-      function apiResponseToGeolocation(data) {
+      if (!amvVehicleId) {
+        Materialize.toast('`vehicleId` is invalid. Cannot show details.', 2000);
+        self.error = {
+          message: '`vehicleId` is invalid. Cannot show details.'
+        };
+        return;
+      }
+
+      function apiResponseToVehicle(data) {
         return {
           id: data.id,
           name: data.id,
@@ -31,11 +32,11 @@ angular.module('amvSystemDemoUi')
 
       (function init() {
 
-        $scope.loading = true;
-        $scope.locations = [];
+        self.loading = true;
+        self.vehicles = [];
 
         var fetchData = function (vehicleIds) {
-          $scope.loading = true;
+          self.loading = true;
 
           return amvXfcdClient.get().then(function (client) {
             return client.getLastData(vehicleIds);
@@ -47,30 +48,20 @@ angular.module('amvSystemDemoUi')
               return [];
             }
             return response.data;
-          }).catch(function (e) {
-            $log.log('error, while getting data');
-            $log.log(e);
-
-            var isAmvException = e && e.response && e.response.data && e.response.data.message;
-            var errorMessage = isAmvException ? e.response.data.message : e;
-            Materialize.toast(errorMessage, 4000);
-            Materialize.toast('Please check your settings.', 5000);
           }).finally(function () {
-            $timeout(function () {
-              $scope.loading = false;
-            }, 333);
+            self.loading = false;
           });
         };
 
         var fetchDataAndPopulateLocations = function (vehicleIds) {
           return fetchData(vehicleIds).then(function (dataArray) {
 
-            $scope.locations = [];
+            self.vehicles = [];
 
             dataArray.forEach(function (data) {
-              var position = apiResponseToGeolocation(data);
+              var position = apiResponseToVehicle(data);
 
-              $scope.locations.push(position);
+              self.vehicles.push(position);
             });
 
             return dataArray;
@@ -111,10 +102,25 @@ angular.module('amvSystemDemoUi')
             } else {
               Materialize.toast('Finished loading ' + data.length + ' location(s)', 1000);
             }
+          }).catch(function (e) {
+            $log.log('error, while getting data');
+            $log.log(e);
+
+            var isAmvException = e && e.response && e.response.data && e.response.data.message;
+            var errorMessage = isAmvException ? e.response.data.message : 'Error while trying to receive data.';
+            Materialize.toast(errorMessage, 4000);
+            Materialize.toast('Please check your settings.', 5000);
+
+            var url = e && e.config && e.config.url;
+
+            self.error = {
+              url: url,
+              message: errorMessage
+            };
           });
         }).catch(function (e) {
           $log.log(e);
-          $scope.loading = false;
+          self.loading = false;
           Materialize.toast('Please check your settings.', 3000);
         });
 

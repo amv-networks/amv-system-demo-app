@@ -53,30 +53,30 @@ angular.module('amvSystemDemoUi')
           : 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
       });
 
-      var createMarkerForGeolocation = function (geolocation) {
+      var createMarkerForVehicle = function (vehicle) {
 
         var markerMessage = '<div>' +
-          '<h6>' + geolocation.name + '</h6>' +
+          '<h6>' + vehicle.name + '</h6>' +
           '<small>' +
-          '<i class="material-icons tiny">room</i> lat/lng: ' + geolocation.location.lat + ' / ' + geolocation.location.lng +
+          '<i class="material-icons tiny">room</i> lat/lng: ' + vehicle.location.lat + ' / ' + vehicle.location.lng +
           '</small>' +
           '<br />' +
           '<small>' +
-          ' <i class="material-icons tiny">av_timer</i> speed: ' + (geolocation.data.speed || 0) + ' km/h' +
+          ' <i class="material-icons tiny">av_timer</i> speed: ' + (vehicle.data.speed || 0) + ' km/h' +
           '</small>' +
           '<br />' +
           '<span>' +
-          //'' + geolocation.condition.temperature +
+          //'' + vehicle.condition.temperature +
           '</span><br />' +
-          //'<span>' + geolocation.condition.state + '</span><br />' +
-          '<small><i class="material-icons tiny">router</i> Data Provider: ' + geolocation.provider + '</small><br />' +
-          '<small><i class="material-icons tiny">query_builder</i> Request Time: ' + geolocation.requestTime + '</small><br />' +
-          '<small><i class="material-icons tiny">query_builder</i> Position Time: ' + geolocation.data.timestamp + '</small>' +
+          //'<span>' + vehicle.condition.state + '</span><br />' +
+          '<small><i class="material-icons tiny">router</i> Data Provider: ' + vehicle.provider + '</small><br />' +
+          '<small><i class="material-icons tiny">query_builder</i> Request Time: ' + vehicle.requestTime + '</small><br />' +
+          '<small><i class="material-icons tiny">query_builder</i> Position Time: ' + vehicle.data.timestamp + '</small>' +
           '</div>';
 
         return {
-          lat: geolocation.location.lat,
-          lng: geolocation.location.lng,
+          lat: vehicle.location.lat,
+          lng: vehicle.location.lng,
           message: markerMessage,
           draggable: false,
           //focus: true,
@@ -89,20 +89,20 @@ angular.module('amvSystemDemoUi')
         };
       };
 
-      function isLocalizable(geolocation) {
-        return (!!geolocation && !!geolocation.location &&
-              geolocation.location.lat &&
-              geolocation.location.lng);
+      function isLocalizable(vehicle) {
+        return (!!vehicle && !!vehicle.location &&
+              vehicle.location.lat &&
+              vehicle.location.lng);
       }
 
       var removeMarkersFromMap = function () {
         self.map.markers = [];
       };
 
-      var addMarkerForGeolocationToMap = function (geolocation) {
-        var localizable = isLocalizable(geolocation);
+      var addMarkerForVehicleToMap = function (vehicle) {
+        var localizable = isLocalizable(vehicle);
         if (localizable) {
-          var marker = createMarkerForGeolocation(geolocation);
+          var marker = createMarkerForVehicle(vehicle);
           self.map.markers.push(marker);
         }
       };
@@ -119,7 +119,7 @@ angular.module('amvSystemDemoUi')
       });
 
 
-      function apiResponseToGeolocation(data) {
+      function apiResponseToVehicle(data) {
         return {
           id: data.id,
           name: data.id,
@@ -134,16 +134,16 @@ angular.module('amvSystemDemoUi')
         };
       }
 
-      $scope.zoomToLocation = function (geolocation, level) {
+      $scope.zoomToLocation = function (vehicle, level) {
         var zoomLevel = level > 0 ? level : 11;
-        var localizable = isLocalizable(geolocation);
+        var localizable = isLocalizable(vehicle);
         if (!localizable) {
-          Materialize.toast('No location data available for ' + geolocation.name, 2000);
+          Materialize.toast('No location data available for ' + vehicle.name, 2000);
         } else {
-          Materialize.toast('Zoom to ' + geolocation.name, 1000);
+          Materialize.toast('Zoom to ' + vehicle.name, 1000);
           self.map.center = {
-            lat: geolocation.location.lat,
-            lng: geolocation.location.lng,
+            lat: vehicle.location.lat,
+            lng: vehicle.location.lng,
             zoom: zoomLevel
           };
         }
@@ -189,10 +189,10 @@ angular.module('amvSystemDemoUi')
             $scope.locations = [];
 
             dataArray.forEach(function (data) {
-              var position = apiResponseToGeolocation(data);
+              var position = apiResponseToVehicle(data);
 
               $scope.locations.push(position);
-              addMarkerForGeolocationToMap(position);
+              addMarkerForVehicleToMap(position);
             });
 
             return dataArray;
@@ -221,11 +221,6 @@ angular.module('amvSystemDemoUi')
           var timeoutIntervalInMilliseconds = (settings.periodicUpdateIntervalInSeconds || 10) * 1000;
 
           var runRecursive = settings.enablePeriodicUpdateInterval;
-
-          // TODO: currently, if a modal is open, and the periodic update runs
-          // the modal will be removed from the DOM - catastrophic user experience
-          // just disable for now, till we have a proper implementation (maybe replace polling with websockets? :D)
-          runRecursive = false;
 
           var fetchMethod = runRecursive ? function () {
             return invokeRecursiveFetchDataAndPopulateLocations(vehicleIds, timeoutIntervalInMilliseconds);
