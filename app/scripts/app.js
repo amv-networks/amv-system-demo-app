@@ -8,14 +8,14 @@ var replaceTaskInvoked = variableNameThatShouldNotBeReplaced !== '@@___ENV_REPLA
 
 /**
  * @ngdoc overview
- * @name amvGeolocationUi
+ * @name amvSystemDemoUi
  * @description
- * # amvGeolocationUi
+ * # amvSystemDemoUi
  *
  * Main module of the application.
  */
 angular
-  .module('amvGeolocationUi', [
+  .module('amvSystemDemoUi', [
     'ngAnimate',
     /*'ngAria',*/
     'ngCookies',

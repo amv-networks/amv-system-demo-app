@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('amvGeolocationUi')
+angular.module('amvSystemDemoUi')
   .controller('SettingsCtrl', [
     'Materialize',
     'SettingsResource',

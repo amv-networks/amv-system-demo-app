@@ -1,7 +1,7 @@
 /* jshint loopfunc:true */
 'use strict';
 
-angular.module('amvGeolocationUi')
+angular.module('amvSystemDemoUi')
   .controller('VehicleDetailCtrl', ['$scope', '$log', '$timeout',
     'Materialize', 'amvClientSettings', 'amvXfcdClient', 'amvVehicleId',
     function ($scope, $log, $timeout, Materialize, amvClientSettings, amvXfcdClient, amvVehicleId) {

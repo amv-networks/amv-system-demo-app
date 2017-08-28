@@ -3,12 +3,12 @@
 
 /**
  * @ngdoc function
- * @name amvGeolocationUi.controller:MainCtrl
+ * @name amvSystemDemoUi.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the amvGeolocationUi
+ * Controller of the amvSystemDemoUi
  */
-angular.module('amvGeolocationUi')
+angular.module('amvSystemDemoUi')
   .controller('MainCtrl', ['$scope', '$log', '$timeout',
     'Materialize', 'amvClientSettings', 'amvXfcdClient',
     function ($scope, $log, $timeout, Materialize, amvClientSettings, amvXfcdClient) {

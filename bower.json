@@ -42,7 +42,7 @@
     "open-iconic": "~1.1.1"
   },
   "appPath": "app",
-  "moduleName": "amvGeolocationUi",
+  "moduleName": "amvSystemDemoUi",
   "resolutions": {
     "angular": "1.6.4"
   },

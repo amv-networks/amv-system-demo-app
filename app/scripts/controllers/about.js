@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name amvGeolocationUi.controller:AboutCtrl
+ * @name amvSystemDemoUi.controller:AboutCtrl
  * @description
  * # AboutCtrl
- * Controller of the amvGeolocationUi
+ * Controller of the amvSystemDemoUi
  */
-angular.module('amvGeolocationUi')
+angular.module('amvSystemDemoUi')
   .controller('AboutCtrl', function () {
     this.awesomeThings = [
       'HTML5 Boilerplate',
