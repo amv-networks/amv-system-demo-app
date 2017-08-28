@@ -1,0 +1,182 @@
+<div class="container">
+  <div class="section">
+    <div class="row">
+      <div class="col s12 m12">
+
+        <h2 class="header light">
+          Settings
+
+          <a class="waves-effect waves-light btn-large amber right"
+             data-ng-click="settings.saveSettings(settings.config)">
+            <i class="material-icons left">done</i>
+            Save
+          </a>
+        </h2>
+
+
+        <div class="col s12">
+          <h3 class="header light">API Settings</h3>
+          <ul class="collection">
+            <li class="collection-item">
+              <div class="input-field">
+                <input id="baseUrl" type="text" class="validate"
+                       data-ng-model="settings.config.api.baseUrl">
+                <label class="active" for="baseUrl">Base URL</label>
+              </div>
+
+              <div class="row" style="margin-bottom: 0;">
+                <div class="input-field col s6">
+                  <input id="username" type="text" class="validate"
+                         data-ng-model="settings.config.api.options.auth.username">
+                  <label class="active" for="username">Username</label>
+                </div>
+
+                <div class="input-field col s6">
+                  <input id="password" type="password" class="validate"
+                         data-ng-model="settings.config.api.options.auth.password">
+                  <label class="active" for="password">Password</label>
+                </div>
+              </div>
+
+              <div class="input-field">
+                <input id="contractId" type="number" class="validate"
+                       data-ng-model="settings.config.api.options.contractId">
+                <label class="active" for="contractId">ContractId</label>
+              </div>
+
+              <h6>Vehicle Ids</h6>
+              <div class="chip" data-ng-repeat="vehicleId in settings.config.api.options.vehicleIds track by $index">
+                {{ vehicleId }}
+                  <i class="material-icons"
+                     data-ng-click="settings.removeVehicleIdWithValue(vehicleId)"
+                     style="cursor: pointer;">close</i>
+              </div>
+              <div class="file-field input-field">
+                <div class="waves-effect waves-light btn right"
+                     data-ng-click="settings.addValueToVehicleIds(__newVehicleId); __newVehicleId = null;">
+                  Add
+                </div>
+                <div class="file-path-wrapper">
+                  <input id="__newVehicleId" type="number" class="validate"
+                        data-ng-model="__newVehicleId"
+                        data-ng-keyup="settings.onKeyUpOnNewVehicleIdInput($event, __newVehicleId)">
+                  <label class="active" for="__newVehicleId">Add VehicleId</label>
+                </div>
+              </div>
+            </li>
+          </ul>
+
+
+          <h3 class="header light">Application Settings</h3>
+
+          <ul class="collection">
+            <li class="collection-item" style="cursor: pointer;"
+                data-ng-class="{ 'grey lighten-3' : settings.optOut }"
+                data-ng-click="settings.toggleOptOut()">
+              <span class="title">Realtime position updates</span>
+
+              <div class="switch right">
+                <label>
+                  Aus
+                  <input type="checkbox" data-ng-model="settings.config.enableStreamingUpdates"
+                         data-ng-true-value="true" data-ng-false-value="false"
+                         data-ng-change-DISABLED="settings.doOnStateChange()">
+                  <span class="lever"></span>
+                  Ein
+                </label>
+              </div>
+
+              <p data-ng-if="settings.config.enableStreamingUpdates">
+                Realtime geolocation information updates are <strong class="green-text">enabled</strong>!
+                Recently fetched geolocation information will be displayed in your map.
+              </p>
+              <p data-ng-if="!settings.config.enableStreamingUpdates">
+                Realtime geolocation information updates are <strong class="grey-text">disabled</strong>!
+                Currently no recently fetched geolocation information will be displayed.
+              </p>
+
+            </li>
+            <li class="collection-item" style="cursor: pointer;"
+                data-ng-class="{ 'grey lighten-3' : settings.optOut }"
+                data-ng-click="settings.toggleOptOut()">
+              <span class="title">Enable periodic update interval</span>
+
+              <div class="switch right">
+                <label>
+                  Aus
+                  <input type="checkbox" data-ng-model="settings.config.enablePeriodicUpdateInterval"
+                         data-ng-true-value="true" data-ng-false-value="false"
+                         data-ng-change-DISABLED="settings.doOnStateChange()">
+                  <span class="lever"></span>
+                  Ein
+                </label>
+              </div>
+
+              <p data-ng-if="settings.config.enablePeriodicUpdateInterval">
+                Periodic update interval is <strong class="green-text">enabled</strong>!
+                Information will be updated every {{ settings.config.periodicUpdateIntervalInSeconds }} seconds.
+              </p>
+              <p data-ng-if="!settings.config.enablePeriodicUpdateInterval">
+                Periodic update interval is <strong class="grey-text">disabled</strong>!
+                Information will be gathered once and will NOT be updated.
+              </p>
+
+            </li>
+            <li class="collection-item">
+              <div class="input-field">
+                <input id="periodicUpdateIntervalInSeconds" type="number" class="validate" min="5"
+                       data-ng-model="settings.config.periodicUpdateIntervalInSeconds"
+                       data-ng-disabled="!settings.config.enablePeriodicUpdateInterval">
+                <label class="active" for="periodicUpdateIntervalInSeconds">Periodic Update Interval In Seconds</label>
+              </div>
+            </li>
+            <li class="collection-item" style="cursor: pointer;"
+                data-ng-class="{ 'grey lighten-3' : settings.optOut }"
+                data-ng-click="settings.toggleOptOut()">
+              <span class="title">Debug Mode</span>
+
+              <div class="switch right">
+                <label>
+                  Aus
+                  <input type="checkbox" data-ng-model="settings.config.debug"
+                         data-ng-true-value="true" data-ng-false-value="false"
+                         data-ng-change-DISABLED="settings.doOnStateChange()">
+                  <span class="lever"></span>
+                  Ein
+                </label>
+              </div>
+
+              <p data-ng-if="settings.config.debug">
+                Debug Mode is <strong class="green-text">enabled</strong>!
+                The application will output and display more fine grained messages.
+              </p>
+              <p data-ng-if="!settings.config.debug">
+                Debug Mode is <strong class="grey-text">disabled</strong>!
+                The application will NOT output or display detailed messages.
+              </p>
+
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+      <div class="col s12 m12">
+        <a class="waves-effect waves-light btn right" data-ng-click="settings.loadDefaultSettings()">
+          <i class="material-icons left">settings_backup_restore</i>
+          Load default values
+        </a>
+      </div>
+
+
+      <div class="col s12 m12">
+        <p data-ng-if="settings.config.debug">
+          <code>
+            {{ settings.config | json }}
+          </code>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>

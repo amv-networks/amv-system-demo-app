@@ -1,0 +1,17 @@
+{
+  "name": "amv-trafficsoft-rest-js",
+  "description": "",
+  "main": "dist/amv-trafficsoft-rest-js.js",
+  "authors": [
+    "[object Object]"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/amvnetworks/amv-trafficsoft-rest-js",
+  "ignore": [
+    "*",
+    "!dist/",
+    "!dist/*",
+    "!readme.md",
+    "!license.md"
+  ]
+}

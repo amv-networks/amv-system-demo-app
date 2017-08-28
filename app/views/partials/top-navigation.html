@@ -1,0 +1,39 @@
+<nav class="nav-extended white" role="navigation" data-ng-controller="TopNavigationController as topnavigation">
+  <div class="nav-wrapper container">
+    <a id="logo-container" href="#/" class="brand-logo">
+      <span class="amv">amv</span> Geolocation
+      <small style="font-size: 50%;">
+        {{topnavigation.gitinfo.local.branch.name}}-{{topnavigation.gitinfo.local.branch.shortSHA}}
+      </small>
+    </a>
+    <ul class="right hide-on-med-and-down">
+      <li ui-sref-active="active"><a data-ui-sref="home">Home</a></li>
+      <li ui-sref-active="active"><a data-ui-sref="settings">Settings</a></li>
+      <li ui-sref-active="active"><a data-ui-sref="about">About</a></li>
+    </ul>
+
+    <ul id="nav-mobile" class="side-nav">
+      <li ui-sref-active="active"><a data-ui-sref="home">Home</a></li>
+      <li ui-sref-active="active"><a data-ui-sref="settings">Settings</a></li>
+      <li ui-sref-active="active"><a data-ui-sref="about">About</a></li>
+    </ul>
+
+    <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+  </div>
+  <!--div class="nav-content container">
+    <ul class="tabs">
+      <li class="tab"><a href="#test1">Test 1</a></li>
+      <li class="tab"><a class="active" href="#test2">Test 2</a></li>
+      <li class="tab disabled"><a href="#test3">Disabled Tab</a></li>
+      <li class="tab"><a href="#test4">Test 4</a></li>
+    </ul>
+  </div-->
+</nav>
+
+<script>
+  (function ($) {
+    $(function () {
+      $('.button-collapse').sideNav();
+    });
+  })(jQuery);
+</script>

@@ -1,0 +1,108 @@
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/**
+* Project Specfic
+*/
+body {
+  background-color: #fff;
+}
+
+/*
+**/
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+.switch label input[type="checkbox"]:checked + .lever {
+  background-color: #fdafb6;
+}
+
+.switch label input[type="checkbox"]:checked + .lever::after {
+  background-color: #fcaf17;
+}
+
+nav ul a,
+nav .brand-logo {
+  color: #444;
+}
+
+nav .brand-logo {
+  letter-spacing: -1px;
+}
+
+nav .brand-logo .amv {
+  color: #fcaf17;
+}
+
+p {
+  line-height: 2rem;
+}
+
+.color-brand {
+  color: #fcaf17;
+}
+
+.bgcolor-brand {
+  background-color: #fcaf17;
+}
+
+.button-collapse {
+  color: #fcaf17;
+}
+
+.parallax-container {
+  min-height: 400px;
+  line-height: 0;
+  height: auto;
+  color: rgba(255, 255, 255, .9);
+}
+
+.parallax-container .section {
+  width: 100%;
+}
+
+@media only screen and (max-width: 992px) {
+  .parallax-container .section {
+    position: absolute;
+    top: 40%;
+  }
+
+  #index-banner .section {
+    top: 10%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .parallax-container {
+    min-height: 480px;
+  }
+
+  #index-banner .section {
+    top: 0;
+  }
+}
+
+.icon-block {
+  padding: 0 15px;
+}
+
+.icon-block .material-icons {
+  font-size: inherit;
+}
+
+footer.page-footer {
+  margin: 0;
+}

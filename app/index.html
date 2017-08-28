@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>amv Geolocation</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/Materialize/bin/materialize.css" />
+  <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/geolocation-adaptions.css">
+  <link rel="stylesheet" href="styles/animations.css">
+  <!-- endbuild -->
+
+  <!--Import Google Icon Font-->
+  <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body data-ng-app="amvGeolocationUi" class="amv-geolocation">
+<!--[if lte IE 8]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+  your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<div data-ng-include="'views/partials/top-navigation.html'"></div>
+
+<div data-ui-view=""></div>
+
+<div data-ng-include="'views/partials/footer.html'"></div>
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-aria/angular-aria.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-messages/angular-messages.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/Materialize/bin/materialize.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/angular-simple-logger/dist/angular-simple-logger.js"></script>
+<script src="bower_components/leaflet/dist/leaflet-src.js"></script>
+<script src="bower_components/ui-leaflet/dist/ui-leaflet.js"></script>
+<script src="bower_components/sockjs-client/dist/sockjs.js"></script>
+<script src="bower_components/vertx3-eventbus-client/vertx-eventbus.js"></script>
+<script src="bower_components/angular-vertxbus/dist/angular-vertxbus.js"></script>
+<script src="bower_components/amv-trafficsoft-rest-js/dist/amv-trafficsoft-rest-js.js"></script>
+<script src="bower_components/js-data/dist/js-data.js"></script>
+<script src="bower_components/js-data-angular/dist/js-data-angular.js"></script>
+<script src="bower_components/localforage/dist/localforage.js"></script>
+<script src="bower_components/js-data-localforage/dist/js-data-localforage.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<script>
+  (function ($) {
+    $(function () {
+      $('.parallax').parallax();
+    }); // end of document ready
+  })(jQuery); // end of jQuery name space
+</script>
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/directives.js"></script>
+<script src="scripts/controllers/main.js"></script>
+<script src="scripts/controllers/settings.js"></script>
+<script src="scripts/controllers/about.js"></script>
+<script src="scripts/controllers/vehicle-detail.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>

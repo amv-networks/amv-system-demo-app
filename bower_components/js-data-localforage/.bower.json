@@ -1,0 +1,46 @@
+{
+  "name": "js-data-localforage",
+  "description": "localforage adapter for js-data.",
+  "homepage": "http://www.js-data.io/docs/dslocalforageadapter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/js-data/js-data-localforage.git"
+  },
+  "author": {
+    "name": "Jason Dobry",
+    "url": "http://www.pseudobry.com",
+    "email": "jason.dobry@gmail.com"
+  },
+  "main": "./dist/js-data-localforage.js",
+  "ignore": [
+    ".idea/",
+    ".*",
+    "*.iml",
+    "src/",
+    "lib/",
+    "doc/",
+    "guide/",
+    "coverage/",
+    "Gruntfile.js",
+    "node_modules/",
+    "test/",
+    "package.json",
+    "karma.conf.js",
+    "karma.start.js"
+  ],
+  "dependencies": {
+    "js-data": ">=2.0.0",
+    "localforage": "~1.x"
+  },
+  "version": "2.1.1",
+  "_release": "2.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.1.1",
+    "commit": "f1f45e50d5f6cadf6163cc31dc6a7e3b07004d83"
+  },
+  "_source": "https://github.com/js-data/js-data-localforage.git",
+  "_target": "^2.1.1",
+  "_originalSource": "js-data-localforage",
+  "_direct": true
+}
