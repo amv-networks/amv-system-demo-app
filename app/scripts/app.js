@@ -37,6 +37,9 @@ angular
   }])
   .factory('amvDemoVehicle', [function () {
     var vehicleMoves = Math.random() >= 0.3 ? true : false;
+    var fuelLevel = Math.round(2 + Math.random() * 59);
+    var speed = Math.round((vehicleMoves ? Math.random() * 100 : 0) * 10) / 10;
+
     return {
       id: -1,
       name: 'Demo Vehicle',
@@ -48,17 +51,44 @@ angular
       requestTime: Date.now(),
       date: Date.now(),
       data: {
-        speed: Math.round((vehicleMoves ? Math.random() * 100 : 0) * 10) / 10,
-        xfcds: [{
-          param: 'kmrd',
-          value: 1337
-        }],
+        speed: speed,
         states: [{
           param: 'vbat',
           value: 12.3
         }, {
           param: 'move',
           value: vehicleMoves ? 1 : 0
+        }, /*{
+         param: 'gsmt',
+         value: Math.round(5 + Math.random() * 25 * 10) / 10
+         }*/],
+        xfcds: [{
+          param: 'kmrd',
+          value: 1337
+        }, {
+          param: 'atmp',
+          value: Math.round(-5 + Math.random() * 40 * 10) / 10
+        }, {
+          param: 'fcon',
+          value: Math.round(Math.random() * 15 * 10) / 10
+        }, {
+          param: 'hbrk',
+          value: vehicleMoves ? 0 : (Math.random() > 0.5 ? 1 : 0)
+        }, {
+          param: 'wrlt',
+          value: (Math.random() > 0.1 ? 1 : 0)
+        }, {
+          param: 'flev',
+          value: Math.round(2 + Math.random() * 59)
+        }, {
+          param: 'chrp',
+          value: vehicleMoves ? 0 : (Math.random() > 0.5 ? 1 : 0)
+        }, {
+          param: 'range',
+          value: fuelLevel * 15
+        }, {
+          param: 'appe',
+          value: Math.min(100, Math.round(Math.random() * speed))
         }]
       }
     };
