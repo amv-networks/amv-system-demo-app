@@ -221,6 +221,11 @@ angular.module('amvSystemDemoUi')
               Materialize.toast('Finished loading ' + data.length + ' location(s)', 1000);
             }
           }).catch(function (e) {
+            if (settings.enableDemoData) {
+              addVehicle(amvDemoVehicle);
+              return;
+            }
+
             $log.log('error, while getting data');
             $log.log(e);
 
@@ -228,12 +233,13 @@ angular.module('amvSystemDemoUi')
             var errorMessage = isAmvException ? e.response.data.message : e;
             Materialize.toast(errorMessage, 4000);
             Materialize.toast('Please check your settings.', 5000);
-
-            addVehicle(amvDemoVehicle);
           });
         }).catch(function (e) {
-          $log.log(e);
           self.loading = false;
+
+          addVehicle(amvDemoVehicle);
+
+          $log.log(e);
           Materialize.toast('Please check your settings.', 3000);
         });
 

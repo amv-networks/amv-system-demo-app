@@ -101,12 +101,6 @@ angular.module('amvSystemDemoUi')
               Materialize.toast('Finished loading ' + data.length + ' location(s)', 1000);
             }
           }).catch(function (e) {
-            var demoMode = vehicleIds && vehicleIds[0] === '-1';
-            if (demoMode) {
-              self.vehicles = [amvDemoVehicle];
-              return;
-            }
-
             $log.log('error, while getting data');
             $log.log(e);
 
@@ -123,8 +117,15 @@ angular.module('amvSystemDemoUi')
             };
           });
         }).catch(function (e) {
-          $log.log(e);
           self.loading = false;
+
+          var demoMode = amvVehicleId === '-1';
+          if (demoMode) {
+            self.vehicles = [amvDemoVehicle];
+            return;
+          }
+
+          $log.log(e);
           Materialize.toast('Please check your settings.', 3000);
         });
 
