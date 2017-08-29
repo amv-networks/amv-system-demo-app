@@ -143,9 +143,13 @@ angular.module('amvSystemDemoUi')
       };
 
       (function init() {
-
         self.loading = true;
         self.vehicles = [];
+        self.periodicUpdateTimeoutPromise = null;
+
+        $scope.$on('$destroy', function () {
+          $timeout.cancel(self.periodicUpdateTimeoutPromise);
+        });
 
         var addVehicle = function (vehicle) {
           self.vehicles.push(vehicle);
@@ -189,7 +193,7 @@ angular.module('amvSystemDemoUi')
           var actualTimeoutIntervalInMilliseconds = 1000 + Math.max(timeoutIntervalInMilliseconds, 5000);
 
           return fetchDataAndPopulateLocations(vehicleIds).then(function (dataArray) {
-            $timeout(function () {
+            self.periodicUpdateTimeoutPromise = $timeout(function () {
               invokeRecursiveFetchDataAndPopulateLocations(vehicleIds, actualTimeoutIntervalInMilliseconds);
             }, actualTimeoutIntervalInMilliseconds);
 

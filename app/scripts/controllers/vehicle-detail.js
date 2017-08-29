@@ -2,9 +2,9 @@
 'use strict';
 
 angular.module('amvSystemDemoUi')
-  .controller('VehicleDetailCtrl', ['$log', '$timeout',
+  .controller('VehicleDetailCtrl', ['$scope', '$log', '$timeout',
     'Materialize', 'amvClientSettings', 'amvXfcdClient', 'amvDemoVehicle', 'amvVehicleId',
-    function ($log, $timeout, Materialize, amvClientSettings, amvXfcdClient, amvDemoVehicle, amvVehicleId) {
+    function ($scope, $log, $timeout, Materialize, amvClientSettings, amvXfcdClient, amvDemoVehicle, amvVehicleId) {
       var self = this;
 
       if (!amvVehicleId) {
@@ -33,6 +33,11 @@ angular.module('amvSystemDemoUi')
       (function init() {
         self.loading = true;
         self.vehicles = [];
+        self.periodicUpdateTimeoutPromise = null;
+
+        $scope.$on('$destroy', function () {
+          $timeout.cancel(self.periodicUpdateTimeoutPromise);
+        });
 
         var fetchData = function (vehicleIds) {
           self.loading = true;
@@ -70,7 +75,7 @@ angular.module('amvSystemDemoUi')
           var actualTimeoutIntervalInMilliseconds = 1000 + Math.max(timeoutIntervalInMilliseconds, 5000);
 
           return fetchDataAndPopulateLocations(vehicleIds).then(function (dataArray) {
-            $timeout(function () {
+            self.periodicUpdateTimeoutPromise = $timeout(function () {
               invokeRecursiveFetchDataAndPopulateLocations(vehicleIds, actualTimeoutIntervalInMilliseconds);
             }, actualTimeoutIntervalInMilliseconds);
 
