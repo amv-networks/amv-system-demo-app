@@ -47,9 +47,9 @@
               <h6>Vehicle Ids</h6>
               <div class="chip" data-ng-repeat="vehicleId in settings.config.api.options.vehicleIds track by $index">
                 {{ vehicleId }}
-                  <i class="material-icons"
-                     data-ng-click="settings.removeVehicleIdWithValue(vehicleId)"
-                     style="cursor: pointer;">close</i>
+                <i class="material-icons"
+                   data-ng-click="settings.removeVehicleIdWithValue(vehicleId)"
+                   style="cursor: pointer;">close</i>
               </div>
               <div class="file-field input-field">
                 <div class="waves-effect waves-light btn right"
@@ -58,8 +58,8 @@
                 </div>
                 <div class="file-path-wrapper">
                   <input id="__newVehicleId" type="number" class="validate"
-                        data-ng-model="__newVehicleId"
-                        data-ng-keyup="settings.onKeyUpOnNewVehicleIdInput($event, __newVehicleId)">
+                         data-ng-model="__newVehicleId"
+                         data-ng-keyup="settings.onKeyUpOnNewVehicleIdInput($event, __newVehicleId)">
                   <label class="active" for="__newVehicleId">Add VehicleId</label>
                 </div>
               </div>
@@ -72,43 +72,70 @@
           <ul class="collection">
             <li class="collection-item" style="cursor: pointer;"
                 data-ng-class="{ 'grey lighten-3' : settings.optOut }"
-                data-ng-click="settings.toggleOptOut()">
-              <span class="title">Realtime position updates</span>
+                data-ng-click="settings.config.enableDemoMode != settings.config.enableDemoMode">
+              <span class="title">Enable demonstration mode</span>
 
               <div class="switch right">
                 <label>
-                  Aus
-                  <input type="checkbox" data-ng-model="settings.config.enableStreamingUpdates"
+                  Off
+                  <input type="checkbox" data-ng-model="settings.config.enableDemoMode"
                          data-ng-true-value="true" data-ng-false-value="false"
                          data-ng-change-DISABLED="settings.doOnStateChange()">
                   <span class="lever"></span>
-                  Ein
+                  On
                 </label>
               </div>
 
-              <p data-ng-if="settings.config.enableStreamingUpdates">
-                Realtime geolocation information updates are <strong class="green-text">enabled</strong>!
-                Recently fetched geolocation information will be displayed in your map.
+              <p data-ng-if="settings.config.enableDemoMode">
+                Demonstration mode is <strong class="green-text">enabled</strong>!
+                A few demonstrative elements will be displayed to show the key features of the application.
               </p>
-              <p data-ng-if="!settings.config.enableStreamingUpdates">
-                Realtime geolocation information updates are <strong class="grey-text">disabled</strong>!
-                Currently no recently fetched geolocation information will be displayed.
+              <p data-ng-if="!settings.config.enableDemoMode">
+                Demonstration mode is <strong class="grey-text">disabled</strong>!
               </p>
 
             </li>
             <li class="collection-item" style="cursor: pointer;"
                 data-ng-class="{ 'grey lighten-3' : settings.optOut }"
-                data-ng-click="settings.toggleOptOut()">
+                data-ng-click="settings.config.enableStreamingUpdates = !settings.config.enableStreamingUpdates">
+              <span class="title">Realtime position updates</span>
+
+              <div class="switch right">
+                <label>
+                  Off
+                  <input type="checkbox" data-ng-model="settings.config.enableStreamingUpdates"
+                         data-ng-true-value="true" data-ng-false-value="false"
+                         data-ng-change-DISABLED="settings.doOnStateChange()">
+                  <span class="lever"></span>
+                  On
+                </label>
+              </div>
+
+              <p data-ng-if="settings.config.enableStreamingUpdates">
+                Realtime geolocation information updates are <strong class="green-text">enabled</strong>!
+                Data will stream into the application in near-realtime.
+                Use wisely as this may generate a lot of data traffic.
+                This feature is currently not implemented.
+              </p>
+              <p data-ng-if="!settings.config.enableStreamingUpdates">
+                Realtime geolocation information updates are <strong class="grey-text">disabled</strong>!
+                Data will be updated on the specified update interval.
+              </p>
+
+            </li>
+            <li class="collection-item" style="cursor: pointer;"
+                data-ng-class="{ 'grey lighten-3' : settings.optOut }"
+                data-ng-click="settings.config.enablePeriodicUpdateInterval = !settings.config.enablePeriodicUpdateInterval">
               <span class="title">Enable periodic update interval</span>
 
               <div class="switch right">
                 <label>
-                  Aus
+                  Off
                   <input type="checkbox" data-ng-model="settings.config.enablePeriodicUpdateInterval"
                          data-ng-true-value="true" data-ng-false-value="false"
                          data-ng-change-DISABLED="settings.doOnStateChange()">
                   <span class="lever"></span>
-                  Ein
+                  On
                 </label>
               </div>
 
@@ -137,12 +164,12 @@
 
               <div class="switch right">
                 <label>
-                  Aus
+                  Off
                   <input type="checkbox" data-ng-model="settings.config.debug"
                          data-ng-true-value="true" data-ng-false-value="false"
                          data-ng-change-DISABLED="settings.doOnStateChange()">
                   <span class="lever"></span>
-                  Ein
+                  On
                 </label>
               </div>
 

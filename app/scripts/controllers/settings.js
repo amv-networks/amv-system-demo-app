@@ -4,11 +4,11 @@ angular.module('amvSystemDemoUi')
   .controller('SettingsCtrl', [
     'Materialize',
     'SettingsResource',
-    'amvClientSettingsTemplate',
-    function (Materialize, SettingsResource, amvClientSettingsTemplate) {
+    'amvSystemDemoUiSettingsTemplate',
+    function (Materialize, SettingsResource, amvSystemDemoUiSettingsTemplate) {
       var self = this;
 
-      var defaultSettings = amvClientSettingsTemplate;
+      var defaultSettings = amvSystemDemoUiSettingsTemplate;
 
       SettingsResource.findAll().then(function (settingsArray) {
         if (settingsArray.length !== 0) {

@@ -3,15 +3,9 @@
 
 angular.module('amvSystemDemoUi')
   .controller('MainCtrl', ['$scope', '$log', '$timeout',
-    'Materialize', 'amvClientSettings', 'amvXfcdClient', 'amvDemoVehicle',
-    function ($scope, $log, $timeout, Materialize, amvClientSettings, amvXfcdClient, amvDemoVehicle) {
+    'Materialize', 'amvSystemDemoUiSettings', 'amvXfcdClient', 'amvDemoVehicle',
+    function ($scope, $log, $timeout, Materialize, amvSystemDemoUiSettings, amvXfcdClient, amvDemoVehicle) {
       var self = this;
-
-      this.awesomeThings = [
-        'HTML5 Boilerplate',
-        'AngularJS',
-        'Karma'
-      ];
 
       this.map = {
         center: {
@@ -174,78 +168,93 @@ angular.module('amvSystemDemoUi')
           });
         };
 
-        var fetchDataAndPopulateLocations = function (vehicleIds) {
+        var fetchDataAndPopulateLocations = function (vehicleIds, onVehicleData) {
           return fetchData(vehicleIds).then(function (dataArray) {
-
-            removeMarkersFromMap();
-            self.vehicles = [];
-
-            dataArray.forEach(function (data) {
-              var vehicle = apiResponseToVehicle(data);
-              addVehicle(vehicle);
-            });
-
-            return dataArray;
+            if (dataArray && dataArray.length > 0) {
+              onVehicleData(dataArray);
+            }
           });
         };
 
-        var invokeRecursiveFetchDataAndPopulateLocations = function (vehicleIds, timeoutIntervalInMilliseconds) {
-          var actualTimeoutIntervalInMilliseconds = 1000 + Math.max(timeoutIntervalInMilliseconds, 5000);
+        var invokeRecursiveFetchDataAndPopulateLocations = function (vehicleIds, onVehicleData, timeoutIntervalInMilliseconds) {
+          var actualTimeoutIntervalInMilliseconds = Math.max(timeoutIntervalInMilliseconds, 5000);
 
-          return fetchDataAndPopulateLocations(vehicleIds).then(function (dataArray) {
+          return fetchDataAndPopulateLocations(vehicleIds, onVehicleData).then(function (dataArray) {
             self.periodicUpdateTimeoutPromise = $timeout(function () {
-              invokeRecursiveFetchDataAndPopulateLocations(vehicleIds, actualTimeoutIntervalInMilliseconds);
+              invokeRecursiveFetchDataAndPopulateLocations(vehicleIds, onVehicleData, actualTimeoutIntervalInMilliseconds);
             }, actualTimeoutIntervalInMilliseconds);
 
             return dataArray;
           });
         };
 
-        amvClientSettings.get().then(function (settings) {
-          self.settings = settings;
-          return settings;
-        }).then(function (settings) {
-          self.settings = settings;
-          var apiSettings = settings.api || {};
-          var vehicleIds = apiSettings.options.vehicleIds || [];
-          var timeoutIntervalInMilliseconds = (settings.periodicUpdateIntervalInSeconds || 10) * 1000;
-
-          var runRecursive = settings.enablePeriodicUpdateInterval;
-
-          var fetchMethod = runRecursive ? function () {
-            return invokeRecursiveFetchDataAndPopulateLocations(vehicleIds, timeoutIntervalInMilliseconds);
-          } : function () {
-            return fetchDataAndPopulateLocations(vehicleIds);
-          };
-
-          fetchMethod().then(function (data) {
-            if (data.length === 0) {
-              Materialize.toast('Response contains empty data!', 2000);
-            } else {
-              Materialize.toast('Finished loading ' + data.length + ' location(s)', 1000);
-            }
-          }).catch(function (e) {
-            if (settings.enableDemoData) {
-              addVehicle(amvDemoVehicle);
-              return;
-            }
-
-            $log.log('error, while getting data');
-            $log.log(e);
-
-            var isAmvException = e && e.response && e.response.data && e.response.data.message;
-            var errorMessage = isAmvException ? e.response.data.message : e;
-            Materialize.toast(errorMessage, 4000);
-            Materialize.toast('Please check your settings.', 5000);
-          });
-        }).catch(function (e) {
-          self.loading = false;
-
+        var removeAllVehicles = function () {
+          self.vehicles = [];
+        };
+        var addDemoVehicle = function () {
           addVehicle(amvDemoVehicle);
+        };
 
-          $log.log(e);
-          Materialize.toast('Please check your settings.', 3000);
-        });
+        amvSystemDemoUiSettings.get()
+          .catch(function (e) {
+            self.loading = false;
+
+            addDemoVehicle();
+
+            $log.log(e);
+          })
+          .then(function (settings) {
+            self.settings = settings;
+
+            var apiSettings = settings.api || {};
+            var vehicleIds = apiSettings.options.vehicleIds || [];
+            var timeoutIntervalInMilliseconds = (settings.periodicUpdateIntervalInSeconds || 10) * 1000;
+
+            var runRecursive = settings.enablePeriodicUpdateInterval;
+
+            var onVehicleData = function (vehicleDataArray) {
+              removeMarkersFromMap();
+
+              removeAllVehicles();
+
+              if (settings.enableDemoMode) {
+                addDemoVehicle();
+              }
+
+              vehicleDataArray.forEach(function (data) {
+                var vehicle = apiResponseToVehicle(data);
+                addVehicle(vehicle);
+              });
+
+            };
+
+            var fetchMethod = runRecursive ? function () {
+              return invokeRecursiveFetchDataAndPopulateLocations(vehicleIds, onVehicleData, timeoutIntervalInMilliseconds);
+            } : function () {
+              return fetchDataAndPopulateLocations(vehicleIds, onVehicleData);
+            };
+
+            fetchMethod().then(function (data) {
+              if (data.length === 0) {
+                Materialize.toast('Response contains empty data!', 2000);
+              } else {
+                Materialize.toast('Finished loading ' + data.length + ' location(s)', 1000);
+              }
+            }).catch(function (e) {
+              if (settings.enableDemoMode) {
+                addDemoVehicle();
+                return;
+              }
+
+              $log.log('error, while getting data');
+              $log.log(e);
+
+              var isAmvException = e && e.response && e.response.data && e.response.data.message;
+              var errorMessage = isAmvException ? e.response.data.message : e;
+              Materialize.toast(errorMessage, 4000);
+              Materialize.toast('Please check your settings.', 5000);
+            });
+          });
 
       })();
     }]);

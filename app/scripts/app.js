@@ -36,17 +36,19 @@ angular
     return DS.defineResource('SettingsResource');
   }])
   .factory('amvDemoVehicle', [function () {
+    var vehicleMoves = Math.random() >= 0.3 ? true : false;
     return {
       id: -1,
       name: 'Demo Vehicle',
       location: {
-        lat: 49.306369,
-        lng: 8.642769
+        lat: Math.round((49.301369 + Math.random() / 100) * 1000000) / 1000000,
+        lng: Math.round((8.638769 + Math.random() / 100) * 1000000) / 1000000
       },
       provider: 'amv networks',
       requestTime: Date.now(),
       date: Date.now(),
       data: {
+        speed: Math.round((vehicleMoves ? Math.random() * 100 : 0) * 10) / 10,
         xfcds: [{
           param: 'kmrd',
           value: 1337
@@ -54,6 +56,9 @@ angular
         states: [{
           param: 'vbat',
           value: 12.3
+        }, {
+          param: 'move',
+          value: vehicleMoves ? 1 : 0
         }]
       }
     };
@@ -102,7 +107,7 @@ angular
       }
     };
   })
-  .factory('amvClientSettingsTemplate', function () {
+  .factory('amvSystemDemoUiSettingsTemplate', function () {
     return {
       api: {
         baseUrl: 'http://www.example.com',
@@ -115,13 +120,14 @@ angular
           vehicleIds: [1, 2, 3],
         }
       },
+      enableDemoMode: true,
       enableStreamingUpdates: false,
       enablePeriodicUpdateInterval: true,
       periodicUpdateIntervalInSeconds: 60,
       debug: false
     };
   })
-  .factory('amvClientSettings', ['SettingsResource', function (SettingsResource) {
+  .factory('amvSystemDemoUiSettings', ['SettingsResource', function (SettingsResource) {
     return {
       get: function () {
         return SettingsResource.findAll().then(function (settingsArray) {
@@ -134,10 +140,10 @@ angular
       }
     };
   }])
-  .factory('amvClientFactory', ['amvTrafficsoftRestJs', 'amvClientSettings', function (amvTrafficsoftRestJs, amvClientSettings) {
+  .factory('amvClientFactory', ['amvTrafficsoftRestJs', 'amvSystemDemoUiSettings', function (amvTrafficsoftRestJs, amvSystemDemoUiSettings) {
     return {
       get: function () {
-        return amvClientSettings.get().then(function (settings) {
+        return amvSystemDemoUiSettings.get().then(function (settings) {
           return settings.api;
         }).then(function (apiSettings) {
           return amvTrafficsoftRestJs(apiSettings.baseUrl, apiSettings.options);
@@ -210,7 +216,33 @@ angular
         controllerAs: 'about'
       });
   }])
+  .run(['$timeout', 'Materialize', 'amvSystemDemoUiSettings', function ($timeout, Materialize, amvSystemDemoUiSettings) {
 
+    Materialize.toast('Welcome to the amv System Demo Application.', 5000);
+
+    amvSystemDemoUiSettings.get()
+      .then(function (settings) {
+        $timeout(function () {
+          if (settings.enableDemoMode) {
+            Materialize.toast('Demonstration mode is enabled. ', 5000);
+          }
+          $timeout(function () {
+            if (settings.enableStreamingUpdates) {
+              Materialize.toast('Streaming data is enabled. ', 5000);
+            }
+          }, 3000);
+        }, 3000);
+      })
+      .catch(function () {
+        $timeout(function () {
+          Materialize.toast('Demonstration mode is enabled. Play around!', 7000);
+
+          $timeout(function () {
+            Materialize.toast('... or adapt the application settings and use your own data :D', 8000);
+          }, 5000);
+        }, 2000);
+      });
+  }])
   .controller('TopNavigationController', ['amvGitInfo', function (amvGitInfo) {
     this.gitinfo = angular.copy(amvGitInfo);
   }]);
