@@ -1,18 +1,18 @@
-<div class="progress amber" style="margin: 0;" data-ng-show="canParams.loading">
+<div class="progress amber" style="margin: 0;" data-ng-show="stateParams.loading">
   <div class="indeterminate amber lighten-4"></div>
 </div>
 
 <div class="row" style="margin-bottom: 0;">
   <div class="container">
 
-    <div data-ng-if="canParams.error">
+    <div data-ng-if="stateParams.error">
       <h2>There has been an error :(</h2>
-      <p>{{ canParams.error.message }}</p>
-      <p data-ng-if="canParams.error.exception">{{ canParams.error.exception }}</p>
-      <pre>{{ canParams.error | json}}</pre>
+      <p>{{ stateParams.error.message }}</p>
+      <p data-ng-if="stateParams.error.exception">{{ stateParams.error.exception }}</p>
+      <pre>{{ stateParams.error | json}}</pre>
     </div>
 
-    <h1>CAN Parameter</h1>
+    <h1>State Parameter</h1>
 
     <form class="">
       <div class="input-field col s12">
@@ -33,14 +33,14 @@
       </thead>
 
       <tbody>
-      <tr data-ng-repeat="canParam in canParams.canParams  | filter:filterInput" data-ng-show="canParam.ACTIVATED === 1">
+      <tr data-ng-repeat="stateParam in stateParams.stateParams  | filter:filterInput">
         <td>
-          <pre>{{ canParam.CODE }}</pre>
+          <pre>{{ stateParam.CODE }}</pre>
         </td>
-        <td>{{ canParam.NAMEEN }}</td>
-        <td>{{ canParam.DESCEN }}</td>
-        <td>{{ canParam.UNIT }}</td>
-        <td>{{ canParam.DATATYPE }}</td>
+        <td>{{ stateParam.NAMEEN }}</td>
+        <td>{{ stateParam.DESCEN }}</td>
+        <td>{{ stateParam.UNIT }}</td>
+        <td>{{ stateParam.DATATYPE }}</td>
       </tr>
       </tbody>
     </table>

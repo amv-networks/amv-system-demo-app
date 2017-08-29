@@ -1,28 +1,37 @@
 'use strict';
 
 angular.module('amvSystemDemoUi')
-.directive('amvVehicleDetail', ['amvCanParams', function (amvCanParams) {
+  .directive('amvVehicleDetail', ['amvCanParams', 'amvStateParams', function (amvCanParams, amvStateParams) {
     return {
       transclude: true,
       scope: {
         vehicle: '&vehicle'
       },
       controllerAs: 'ctrl',
-      controller: ['$scope', function($scope) {
+      controller: ['$scope', function ($scope) {
         var self = this;
 
         var vehicle = $scope.vehicle();
-        $scope.model = {};
-        $scope.model.vehicle = vehicle;
-        $scope.model.requestTime = moment(vehicle.requestTime);
-        $scope.model.requestTimeFromNow = moment(vehicle.requestTime).fromNow();
-        $scope.model.positionTime = moment(vehicle.data.timestamp);
-        $scope.model.positionTimeFromNow = moment(vehicle.data.timestamp).fromNow();
+
+        self.model = {};
+        self.model.vehicle = vehicle;
+        self.model.requestTime = moment(vehicle.requestTime);
+        self.model.requestTimeFromNow = moment(vehicle.requestTime).fromNow();
+        self.model.positionTime = moment(vehicle.data.timestamp);
+        self.model.positionTimeFromNow = moment(vehicle.data.timestamp).fromNow();
+        
+        amvCanParams.get().then(function (response) {
+          self.canParamsMap = _.keyBy(response, 'CODE');
+        });
+
+        amvStateParams.get().then(function (response) {
+          self.stateParamsMap = _.keyBy(response, 'CODE');
+        });
 
         this.map = {
           center: {
-            lat:  $scope.model.vehicle.location.lat,
-            lng:  $scope.model.vehicle.location.lng,
+            lat: self.model.vehicle.location.lat,
+            lng: self.model.vehicle.location.lng,
             //zoom: 5
             zoom: 12
           },
@@ -70,8 +79,8 @@ angular.module('amvSystemDemoUi')
 
         function isLocalizable(geolocation) {
           return (!!geolocation && !!geolocation.location &&
-                geolocation.location.lat &&
-                geolocation.location.lng);
+          geolocation.location.lat &&
+          geolocation.location.lng);
         }
 
         var removeMarkersFromMap = function () {
@@ -99,15 +108,8 @@ angular.module('amvSystemDemoUi')
         };
 
         removeMarkersFromMap();
-        addMarkerForGeolocationToMap($scope.model.vehicle);
-        zoomToLocation($scope.model.vehicle, 17);
-
-        amvCanParams.get().then(function (response) {
-          self.canParamsMap = _.keyBy(response, 'CODE');
-        }).catch(function () {
-        }).finally(function () {
-          self.loading = false;
-        });
+        addMarkerForGeolocationToMap(self.model.vehicle);
+        zoomToLocation(self.model.vehicle, 17);
       }],
       templateUrl: 'views/directives/amv-vehicle-detail.html'
     };

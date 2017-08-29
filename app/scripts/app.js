@@ -50,6 +50,10 @@ angular
         xfcds: [{
           param: 'kmrd',
           value: 1337
+        }],
+        states: [{
+          param: 'vbat',
+          value: 12.3
         }]
       }
     };
@@ -181,6 +185,12 @@ angular
         templateUrl: 'views/page/can-params.html',
         controller: 'CanParamsCtrl',
         controllerAs: 'canParams'
+      })
+      .state('stateparams', {
+        url: '/state-params',
+        templateUrl: 'views/page/state-params.html',
+        controller: 'StateParamsCtrl',
+        controllerAs: 'stateParams'
       })
       .state('vehicle', {
         url: '/vehicle-detail/:id',
