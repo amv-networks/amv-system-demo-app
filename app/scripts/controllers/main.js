@@ -1,17 +1,10 @@
 /* jshint loopfunc:true */
 'use strict';
 
-/**
- * @ngdoc function
- * @name amvSystemDemoUi.controller:MainCtrl
- * @description
- * # MainCtrl
- * Controller of the amvSystemDemoUi
- */
 angular.module('amvSystemDemoUi')
   .controller('MainCtrl', ['$scope', '$log', '$timeout',
-    'Materialize', 'amvClientSettings', 'amvXfcdClient',
-    function ($scope, $log, $timeout, Materialize, amvClientSettings, amvXfcdClient) {
+    'Materialize', 'amvClientSettings', 'amvXfcdClient', 'amvDemoVehicle',
+    function ($scope, $log, $timeout, Materialize, amvClientSettings, amvXfcdClient, amvDemoVehicle) {
       var self = this;
 
       this.awesomeThings = [
@@ -91,8 +84,8 @@ angular.module('amvSystemDemoUi')
 
       function isLocalizable(vehicle) {
         return (!!vehicle && !!vehicle.location &&
-              vehicle.location.lat &&
-              vehicle.location.lng);
+        vehicle.location.lat &&
+        vehicle.location.lng);
       }
 
       var removeMarkersFromMap = function () {
@@ -122,7 +115,7 @@ angular.module('amvSystemDemoUi')
       function apiResponseToVehicle(data) {
         return {
           id: data.id,
-          name: data.id,
+          name: data.name || data.id,
           location: {
             lat: data.latitude,
             lng: data.longitude
@@ -151,11 +144,16 @@ angular.module('amvSystemDemoUi')
 
       (function init() {
 
-        $scope.loading = true;
-        $scope.locations = [];
+        self.loading = true;
+        self.vehicles = [];
+
+        var addVehicle = function (vehicle) {
+          self.vehicles.push(vehicle);
+          addMarkerForVehicleToMap(vehicle);
+        };
 
         var fetchData = function (vehicleIds) {
-          $scope.loading = true;
+          self.loading = true;
 
           return amvXfcdClient.get().then(function (client) {
             return client.getLastData(vehicleIds);
@@ -167,18 +165,8 @@ angular.module('amvSystemDemoUi')
               return [];
             }
             return response.data;
-          }).catch(function (e) {
-            $log.log('error, while getting data');
-            $log.log(e);
-
-            var isAmvException = e && e.response && e.response.data && e.response.data.message;
-            var errorMessage = isAmvException ? e.response.data.message : e;
-            Materialize.toast(errorMessage, 4000);
-            Materialize.toast('Please check your settings.', 5000);
           }).finally(function () {
-            $timeout(function () {
-              $scope.loading = false;
-            }, 333);
+            self.loading = false;
           });
         };
 
@@ -186,13 +174,11 @@ angular.module('amvSystemDemoUi')
           return fetchData(vehicleIds).then(function (dataArray) {
 
             removeMarkersFromMap();
-            $scope.locations = [];
+            self.vehicles = [];
 
             dataArray.forEach(function (data) {
-              var position = apiResponseToVehicle(data);
-
-              $scope.locations.push(position);
-              addMarkerForVehicleToMap(position);
+              var vehicle = apiResponseToVehicle(data);
+              addVehicle(vehicle);
             });
 
             return dataArray;
@@ -234,10 +220,20 @@ angular.module('amvSystemDemoUi')
             } else {
               Materialize.toast('Finished loading ' + data.length + ' location(s)', 1000);
             }
+          }).catch(function (e) {
+            $log.log('error, while getting data');
+            $log.log(e);
+
+            var isAmvException = e && e.response && e.response.data && e.response.data.message;
+            var errorMessage = isAmvException ? e.response.data.message : e;
+            Materialize.toast(errorMessage, 4000);
+            Materialize.toast('Please check your settings.', 5000);
+
+            addVehicle(amvDemoVehicle);
           });
         }).catch(function (e) {
           $log.log(e);
-          $scope.loading = false;
+          self.loading = false;
           Materialize.toast('Please check your settings.', 3000);
         });
 

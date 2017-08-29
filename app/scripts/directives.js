@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('amvSystemDemoUi')
-.directive('amvVehicleDetail', [function () {
+.directive('amvVehicleDetail', ['amvCanParams', function (amvCanParams) {
     return {
       transclude: true,
       scope: {
@@ -101,6 +101,13 @@ angular.module('amvSystemDemoUi')
         removeMarkersFromMap();
         addMarkerForGeolocationToMap($scope.model.vehicle);
         zoomToLocation($scope.model.vehicle, 17);
+
+        amvCanParams.get().then(function (response) {
+          self.canParamsMap = _.keyBy(response, 'CODE');
+        }).catch(function () {
+        }).finally(function () {
+          self.loading = false;
+        });
       }],
       templateUrl: 'views/directives/amv-vehicle-detail.html'
     };

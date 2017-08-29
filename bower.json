@@ -25,7 +25,8 @@
     "js-data-angular": "^3.2.1",
     "js-data": "^2.10.0",
     "js-data-localforage": "^2.1.1",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "lodash": "^4.17.4"
   },
   "ignore": [
     "**/.*",

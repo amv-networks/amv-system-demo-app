@@ -45,6 +45,7 @@ module.exports = function(config) {
       'bower_components/localforage/dist/localforage.js',
       'bower_components/js-data-localforage/dist/js-data-localforage.js',
       'bower_components/moment/moment.js',
+      'bower_components/lodash/lodash.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",

@@ -35,6 +35,25 @@ angular
   .factory('SettingsResource', ['DS', function (DS) {
     return DS.defineResource('SettingsResource');
   }])
+  .factory('amvDemoVehicle', [function () {
+    return {
+      id: -1,
+      name: 'Demo Vehicle',
+      location: {
+        lat: 49.306369,
+        lng: 8.642769
+      },
+      provider: 'amv networks',
+      requestTime: Date.now(),
+      date: Date.now(),
+      data: {
+        xfcds: [{
+          param: 'kmrd',
+          value: 1337
+        }]
+      }
+    };
+  }])
 
   .factory('amvApplicationInfo', [function () {
     if (replaceTaskInvoked) {
