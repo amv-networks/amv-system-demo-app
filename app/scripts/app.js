@@ -157,14 +157,15 @@ angular
       debug: false
     };
   })
-  .factory('amvSystemDemoUiSettings', ['SettingsResource', function (SettingsResource) {
+  .factory('amvSystemDemoUiSettings', ['SettingsResource', 'amvSystemDemoUiSettingsTemplate', function (SettingsResource, amvSystemDemoUiSettingsTemplate) {
     return {
       get: function () {
         return SettingsResource.findAll().then(function (settingsArray) {
           if (settingsArray.length !== 1) {
             throw new Error('Cannot find settings.');
           } else {
-            return settingsArray[0];
+            var settings = _.defaults({}, settingsArray[0]);
+            return _.defaults(settings, amvSystemDemoUiSettingsTemplate);
           }
         });
       }
