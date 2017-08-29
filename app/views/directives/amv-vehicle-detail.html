@@ -26,20 +26,12 @@
         </div>
       </div>
       <div class="col s12 m12 l12" style="padding: 0;">
-
         <ul>
           <li data-ng-repeat="state in model.vehicle.data.states">
             <div>
               <i class="material-icons tiny">label</i>
               {{ state.param }}: <span>{{ state.value }}</span>
             </div>
-          </li>
-        </ul>
-
-        <ul>
-          <li data-ng-repeat="xfcd in model.vehicle.data.xfcds">
-            <i class="material-icons tiny">label</i>
-            {{ xfcd.param }}: <span>{{ xfcd.value }}</span>
           </li>
         </ul>
 
