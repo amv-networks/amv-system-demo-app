@@ -63,6 +63,7 @@ angular.module('amvSystemDemoUi')
             if (dataArray && dataArray.length > 0) {
               onVehicleData(dataArray);
             }
+            return dataArray;
           });
         };
 
