@@ -140,7 +140,7 @@ angular
   .factory('amvSystemDemoUiSettingsTemplate', function () {
     return {
       api: {
-        baseUrl: 'http://www.example.com',
+        baseUrl: 'https://www.example.com',
         options: {
           contractId: 1,
           auth: {
