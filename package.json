@@ -7,6 +7,9 @@
   },
   "license": "Apache-2.0",
   "private": true,
+  "scripts": {
+    "test": "grunt default --verbose"
+  },
   "devDependencies": {
     "autoprefixer-core": "^6.0.1",
     "grunt": "^0.4.5",
