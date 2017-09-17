@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/amv-networks/amv-system-demo-app.svg?branch=master)](https://travis-ci.org/amv-networks/amv-system-demo-app)
 [![License](https://img.shields.io/github/license/amv-networks/amv-system-demo-app.svg?maxAge=2592000)](https://github.com/amv-networks/amv-system-demo-app/blob/master/LICENSE)
 
 # amv-system-demo-app
