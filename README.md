@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/github/license/amvnetworks/amv-system-demo-app.svg?maxAge=2592000)](https://github.com/amvnetworks/amv-system-demo-app/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/amv-networks/amv-system-demo-app.svg?maxAge=2592000)](https://github.com/amv-networks/amv-system-demo-app/blob/master/LICENSE)
 
 # amv-system-demo-app
 
