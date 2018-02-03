@@ -3,24 +3,30 @@
   "description": "",
   "main": "dist/amv-trafficsoft-rest-js.js",
   "authors": [
-    "[object Object]"
+    {
+      "name": "AMV Networks GmbH",
+      "email": "development@amv-networks.com",
+      "homepage": "https://www.amv-networks.com"
+    }
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "homepage": "https://github.com/amvnetworks/amv-trafficsoft-rest-js",
   "ignore": [
     "*",
     "!dist/",
     "!dist/*",
     "!readme.md",
-    "!license.md"
+    "!LICENSE",
+    "!NOTICE"
   ],
-  "_release": "7dee193885",
+  "version": "0.2.0",
+  "_release": "0.2.0",
   "_resolution": {
-    "type": "branch",
-    "branch": "master",
-    "commit": "7dee193885de48d6769443bb60154bab5c7b6308"
+    "type": "version",
+    "tag": "v0.2.0",
+    "commit": "3e5a37b7f2a899f6fec2f6a90ba16ca2ab77ef91"
   },
   "_source": "https://github.com/amvnetworks/amv-trafficsoft-rest-js.git",
-  "_target": "master",
+  "_target": "v0.2.0",
   "_originalSource": "amvnetworks/amv-trafficsoft-rest-js"
 }

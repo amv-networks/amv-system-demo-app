@@ -11,8 +11,9 @@ angular.module('amvSystemDemoUi')
 
         amvStateParams.get().then(function (response) {
           self.stateParams = response;
-        }).catch(function () {
-          self.error = 'Error while loading state params.';
+        }).catch(function (e) {
+          var errorMessage = e.message || '';
+          self.error = 'Error while loading state params. ' + errorMessage;
         }).finally(function () {
           self.loading = false;
         });

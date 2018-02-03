@@ -50,11 +50,17 @@
 
       <tbody>
       <tr data-ng-repeat="state in ctrl.model.vehicle.data.states | filter:filterStateParamInput"
-          data-ng-show="!!ctrl.stateParamsMap[state.param]">
-        <td>{{ ctrl.stateParamsMap[state.param].NAMEEN }}</td>
+          data-ng-show-DISABLED="!!ctrl.stateParamsMap[state.param]">
+        <!--td>{{ ctrl.canParamsMap[xfcd.param].code }}</td-->
+        <td>
+          <span data-materialize-tooltipped data-delay="50"
+                data-tooltip="{{ ctrl.stateParamsMap[state.code].description || 'No info.' }}">
+            {{ state.param }}
+          </span>
+        </td>
         <td>
           <span>{{ state.value }}</span>
-          <span>{{ ctrl.stateParamsMap[state.param].UNIT }}</span>
+          <!--span>{{ ctrl.stateParamsMap[state.param].UNIT }}</span-->
         </td>
       </tr>
       </tbody>
@@ -75,11 +81,17 @@
 
       <tbody>
       <tr data-ng-repeat="xfcd in ctrl.model.vehicle.data.xfcds | filter:filterXfcdParamInput"
-          data-ng-show="!!ctrl.canParamsMap[xfcd.param]">
-        <td>{{ ctrl.canParamsMap[xfcd.param].NAMEEN }}</td>
+          data-ng-show-DISABLED="!!ctrl.canParamsMap[xfcd.param]">
+        <!--td>{{ ctrl.canParamsMap[xfcd.param].code }}</td-->
+        <td>
+          <span data-materialize-tooltipped data-delay="50"
+                data-tooltip="{{ ctrl.canParamsMap[xfcd.param].description || 'No info.' }}">
+            {{ xfcd.param }}
+          </span>
+        </td>
         <td>
           <span>{{ xfcd.value }}</span>
-          <span>{{ ctrl.canParamsMap[xfcd.param].UNIT }}</span>
+          <!--span>{{ ctrl.canParamsMap[xfcd.param].UNIT }}</span-->
         </td>
         <!--td>{{ canParam.DESCEN }}</td>
         <td>{{ canParam.UNIT }}</td>

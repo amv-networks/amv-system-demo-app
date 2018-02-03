@@ -24,23 +24,19 @@
     <table>
       <thead>
       <tr>
-        <th>CODE</th>
-        <th>NAME</th>
-        <th>DESC</th>
-        <th>UNIT</th>
-        <th>DATATYPE</th>
+        <th>code</th>
+        <th>name</th>
+        <th>description</th>
       </tr>
       </thead>
 
       <tbody>
-      <tr data-ng-repeat="canParam in canParams.canParams  | filter:filterInput" data-ng-show="canParam.ACTIVATED === 1">
+      <tr data-ng-repeat="canParam in canParams.canParams | filter:filterInput">
         <td>
-          <pre>{{ canParam.CODE }}</pre>
+          <pre>{{ canParam.code }}</pre>
         </td>
-        <td>{{ canParam.NAMEEN }}</td>
-        <td>{{ canParam.DESCEN }}</td>
-        <td>{{ canParam.UNIT }}</td>
-        <td>{{ canParam.DATATYPE }}</td>
+        <td>{{ canParam.name }}</td>
+        <td>{{ canParam.description }}</td>
       </tr>
       </tbody>
     </table>

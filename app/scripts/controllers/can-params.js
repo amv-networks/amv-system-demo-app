@@ -11,8 +11,9 @@ angular.module('amvSystemDemoUi')
 
         amvCanParams.get().then(function (response) {
           self.canParams = response;
-        }).catch(function () {
-          self.error = 'Error while loading can params.';
+        }).catch(function (e) {
+          var errorMessage = e.message || '';
+          self.error = 'Error while loading can params. ' + errorMessage;
         }).finally(function () {
           self.loading = false;
         });

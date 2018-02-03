@@ -171,12 +171,28 @@ angular
       }
     };
   }])
-  .factory('amvClientFactory', ['amvTrafficsoftRestJs', 'amvSystemDemoUiSettings', function (amvTrafficsoftRestJs, amvSystemDemoUiSettings) {
+  .factory('amvTrafficsoftApiSettings', ['amvTrafficsoftRestJs', 'amvSystemDemoUiSettings', function (amvTrafficsoftRestJs, amvSystemDemoUiSettings) {
     return {
       get: function () {
         return amvSystemDemoUiSettings.get().then(function (settings) {
           return settings.api;
-        }).then(function (apiSettings) {
+        });
+      }
+    };
+  }])
+  .factory('authContractId', ['amvTrafficsoftRestJs', 'amvSystemDemoUiSettings', function (amvTrafficsoftRestJs, amvSystemDemoUiSettings) {
+    return {
+      get: function () {
+        return amvSystemDemoUiSettings.get().then(function (settings) {
+          return settings.api.options.contractId;
+        });
+      }
+    };
+  }])
+  .factory('amvClientFactory', ['amvTrafficsoftRestJs', 'amvTrafficsoftApiSettings', function (amvTrafficsoftRestJs, amvTrafficsoftApiSettings) {
+    return {
+      get: function () {
+        return amvTrafficsoftApiSettings.get().then(function (apiSettings) {
           return amvTrafficsoftRestJs(apiSettings.baseUrl, apiSettings.options);
         });
       }
@@ -187,6 +203,15 @@ angular
       get: function () {
         return amvClientFactory.get().then(function (factory) {
           return factory.xfcd();
+        });
+      }
+    };
+  }])
+  .factory('amvContractClient', ['amvClientFactory', function (amvClientFactory) {
+    return {
+      get: function () {
+        return amvClientFactory.get().then(function (factory) {
+          return factory.contract();
         });
       }
     };

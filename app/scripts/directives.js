@@ -19,13 +19,13 @@ angular.module('amvSystemDemoUi')
         self.model.requestTimeFromNow = moment(vehicle.requestTime).fromNow();
         self.model.positionTime = moment(vehicle.data.timestamp);
         self.model.positionTimeFromNow = moment(vehicle.data.timestamp).fromNow();
-        
+
         amvCanParams.get().then(function (response) {
-          self.canParamsMap = _.keyBy(response, 'CODE');
+          self.canParamsMap = _.keyBy(response, 'code');
         });
 
         amvStateParams.get().then(function (response) {
-          self.stateParamsMap = _.keyBy(response, 'CODE');
+          self.stateParamsMap = _.keyBy(response, 'code');
         });
 
         this.map = {
