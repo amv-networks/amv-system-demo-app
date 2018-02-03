@@ -42,6 +42,6 @@
     "commit": "c18fbcf330406ae0af63f89118acfd958159c823"
   },
   "_source": "https://github.com/knalli/angular-vertxbus.git",
-  "_target": "^6.1.1",
+  "_target": "6.1.1",
   "_originalSource": "angular-vertxbus"
 }

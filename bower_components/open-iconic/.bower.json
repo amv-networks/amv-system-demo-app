@@ -24,8 +24,7 @@
     "tag": "1.1.1",
     "commit": "5f154e7a1482b54d91443142b7b3c747be4b3b64"
   },
-  "_source": "git://github.com/iconic/open-iconic.git",
-  "_target": "~1.1.1",
-  "_originalSource": "open-iconic",
-  "_direct": true
+  "_source": "https://github.com/iconic/open-iconic.git",
+  "_target": "1.1.1",
+  "_originalSource": "open-iconic"
 }

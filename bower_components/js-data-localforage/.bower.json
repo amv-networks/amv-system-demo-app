@@ -40,7 +40,6 @@
     "commit": "f1f45e50d5f6cadf6163cc31dc6a7e3b07004d83"
   },
   "_source": "https://github.com/js-data/js-data-localforage.git",
-  "_target": "^2.1.1",
-  "_originalSource": "js-data-localforage",
-  "_direct": true
+  "_target": "2.1.1",
+  "_originalSource": "js-data-localforage"
 }

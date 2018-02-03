@@ -10,23 +10,23 @@
     }
   ],
   "dependencies": {
-    "angular": "1.6.4",
-    "angular-animate": "1.6.4",
-    "angular-aria": "1.6.4",
-    "angular-cookies": "1.6.4",
-    "angular-messages": "1.6.4",
-    "angular-sanitize": "1.6.4",
-    "angular-touch": "1.6.4",
-    "Materialize": "materialize#~0.98.2",
-    "angular-ui-router": "~0.4.2",
-    "ui-leaflet": "^1.0.3",
-    "angular-vertxbus": "^6.1.1",
+    "angular": "1.6.7",
+    "angular-animate": "1.6.7",
+    "angular-aria": "1.6.7",
+    "angular-cookies": "1.6.7",
+    "angular-messages": "1.6.7",
+    "angular-sanitize": "1.6.7",
+    "angular-touch": "1.6.7",
+    "Materialize": "materialize#~0.100.2",
+    "angular-ui-router": "1.0.14",
+    "ui-leaflet": "1.0.3",
+    "angular-vertxbus": "6.1.1",
     "amv-trafficsoft-rest-js": "amvnetworks/amv-trafficsoft-rest-js#v0.2.0",
-    "js-data-angular": "^3.2.1",
-    "js-data": "^2.10.0",
-    "js-data-localforage": "^2.1.1",
-    "moment": "^2.18.1",
-    "lodash": "^4.17.4"
+    "js-data-angular": "3.2.1",
+    "js-data": "2.10.0",
+    "js-data-localforage": "2.1.1",
+    "moment": "2.18.1",
+    "lodash": "4.17.4"
   },
   "ignore": [
     "**/.*",
@@ -39,24 +39,12 @@
     "!NOTICE"
   ],
   "devDependencies": {
-    "angular-mocks": "1.6.4",
-    "open-iconic": "~1.1.1"
+    "angular-mocks": "1.6.7",
+    "open-iconic": "1.1.1"
   },
   "appPath": "app",
   "moduleName": "amvSystemDemoUi",
   "resolutions": {
-    "angular": "1.6.4"
-  },
-  "overrides": {
-    "weather-icons": {
-      "main": [
-        "css/weather-icons.css",
-        "font/weathericons-regular-webfont.eot",
-        "font/weathericons-regular-webfont.svg",
-        "font/weathericons-regular-webfont.ttf",
-        "font/weathericons-regular-webfont.woff",
-        "font/weathericons-regular-webfont.woff2"
-      ]
-    }
+    "angular": "1.6.7"
   }
 }

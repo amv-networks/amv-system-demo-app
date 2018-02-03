@@ -6,7 +6,7 @@
       var input_selector = 'input[type=text], input[type=password], input[type=email], input[type=url], input[type=tel], input[type=number], input[type=search], textarea';
       $(input_selector).each(function(index, element) {
         var $this = $(this);
-        if ($(element).val().length > 0 || element.autofocus || $this.attr('placeholder') !== undefined) {
+        if ($(element).val().length > 0 || $(element).is(':focus') || element.autofocus || $this.attr('placeholder') !== undefined) {
           $this.siblings('label').addClass('active');
         } else if ($(element)[0].validity) {
           $this.siblings('label').toggleClass('active', $(element)[0].validity.badInput === true);
@@ -74,7 +74,7 @@
       var lenAttr = parseInt(object.attr('data-length'));
       var len = object.val().length;
 
-      if (object.val().length === 0 && object[0].validity.badInput === false) {
+      if (object.val().length === 0 && object[0].validity.badInput === false && !object.is(':required')) {
         if (object.hasClass('validate')) {
           object.removeClass('valid');
           object.removeClass('invalid');
@@ -124,14 +124,21 @@
       var fontFamily = $textarea.css('font-family');
       var fontSize = $textarea.css('font-size');
       var lineHeight = $textarea.css('line-height');
+      var padding = $textarea.css('padding');
 
       if (fontSize) { hiddenDiv.css('font-size', fontSize); }
       if (fontFamily) { hiddenDiv.css('font-family', fontFamily); }
       if (lineHeight) { hiddenDiv.css('line-height', lineHeight); }
+      if (padding) { hiddenDiv.css('padding', padding); }
 
-      if ($textarea.attr('wrap') === "off") {
-        hiddenDiv.css('overflow-wrap', "normal")
-                 .css('white-space', "pre");
+      // Set original-height, if none
+      if (!$textarea.data('original-height')) {
+        $textarea.data('original-height', $textarea.height());
+      }
+
+      if ($textarea.attr('wrap') === 'off') {
+        hiddenDiv.css('overflow-wrap', 'normal')
+                 .css('white-space', 'pre');
       }
 
       hiddenDiv.text($textarea.val() + '\n');
@@ -149,21 +156,22 @@
         hiddenDiv.css('width', $(window).width()/2);
       }
 
+
       /**
        * Resize if the new height is greater than the
        * original height of the textarea
        */
-      if ($textarea.data("original-height") <= hiddenDiv.height()) {
+      if ($textarea.data('original-height') <= hiddenDiv.height()) {
         $textarea.css('height', hiddenDiv.height());
-      } else if ($textarea.val().length < $textarea.data("previous-length")) {
+      } else if ($textarea.val().length < $textarea.data('previous-length')) {
         /**
          * In case the new height is less than original height, it
          * means the textarea has less text than before
          * So we set the height to the original one
          */
-        $textarea.css('height', $textarea.data("original-height"));
+        $textarea.css('height', $textarea.data('original-height'));
       }
-      $textarea.data("previous-length", $textarea.val().length);
+      $textarea.data('previous-length', $textarea.val().length);
     }
 
     $(text_area_selector).each(function () {
@@ -172,8 +180,8 @@
        * Instead of resizing textarea on document load,
        * store the original height and the original length
        */
-      $textarea.data("original-height", $textarea.height());
-      $textarea.data("previous-length", $textarea.val().length);
+      $textarea.data('original-height', $textarea.height());
+      $textarea.data('previous-length', $textarea.val().length);
     });
 
     $('body').on('keyup keydown autoresize', text_area_selector, function () {
@@ -389,8 +397,7 @@
               if (val.length >= options.minLength) {
                 for(var key in data) {
                   if (data.hasOwnProperty(key) &&
-                      key.toLowerCase().indexOf(val) !== -1 &&
-                      key.toLowerCase() !== val) {
+                      key.toLowerCase().indexOf(val) !== -1) {
                     // Break if past limit
                     if (count >= options.limit) {
                       break;
@@ -454,7 +461,7 @@
           });
 
           // Set input value
-          $autocomplete.on('mousedown.autocomplete touchstart.autocomplete', 'li', function () {
+          $autocomplete.off('mousedown.autocomplete touchstart.autocomplete').on('mousedown.autocomplete touchstart.autocomplete', 'li', function () {
             var text = $(this).text().trim();
             $input.val(text);
             $input.trigger('change');
@@ -465,6 +472,10 @@
               options.onAutocomplete.call(this, text);
             }
           });
+
+        // Empty data
+        } else {
+          $input.off('keyup.autocomplete focus.autocomplete');
         }
       });
     };
@@ -483,7 +494,7 @@
       }
 
       var multiple = $select.attr('multiple') ? true : false,
-          lastID = $select.data('select-id'); // Tear down structure if Select needs to be rebuilt
+          lastID = $select.attr('data-select-id'); // Tear down structure if Select needs to be rebuilt
 
       if (lastID) {
         $select.parent().find('span.caret').remove();
@@ -495,14 +506,17 @@
 
       // If destroying the select, remove the selelct-id and reset it to it's uninitialized state.
       if(callback === 'destroy') {
-        $select.data('select-id', null).removeClass('initialized');
+        $select.removeAttr('data-select-id').removeClass('initialized');
+        $(window).off('click.select');
         return;
       }
 
       var uniqueID = Materialize.guid();
-      $select.data('select-id', uniqueID);
+      $select.attr('data-select-id', uniqueID);
       var wrapper = $('<div class="select-wrapper"></div>');
       wrapper.addClass($select.attr('class'));
+      if ($select.is(':disabled'))
+        wrapper.addClass('disabled');
       var options = $('<ul id="select-options-' + uniqueID +'" class="dropdown-content select-dropdown ' + (multiple ? 'multiple-select-dropdown' : '') + '"></ul>'),
           selectChildren = $select.children('option, optgroup'),
           valuesSelected = [],
@@ -588,8 +602,6 @@
       $select.wrap(wrapper);
       // Add Select Display Element
       var dropdownIcon = $('<span class="caret">&#9660;</span>');
-      if ($select.is(':disabled'))
-        dropdownIcon.addClass('disabled');
 
       // escape double quotes
       var sanitizedLabelHtml = label.replace(/"/g, '&quot;');
@@ -615,6 +627,7 @@
         'focus': function (){
           if ($('ul.select-dropdown').not(options[0]).is(':visible')) {
             $('input.select-dropdown').trigger('close');
+            $(window).off('click.select');
           }
           if (!options.is(':visible')) {
             $(this).trigger('open', ['focus']);
@@ -627,6 +640,11 @@
               return $(this).text().toLowerCase() === label.toLowerCase();
             })[0];
             activateOption(options, selectedOption, true);
+
+            $(window).off('click.select').on('click.select', function () {
+              multiple && (optionsHover || $newSelect.trigger('close'));
+              $(window).off('click.select');
+            });
           }
         },
         'click': function (e){
@@ -637,6 +655,7 @@
       $newSelect.on('blur', function() {
         if (!multiple) {
           $(this).trigger('close');
+          $(window).off('click.select');
         }
         options.find('li.selected').removeClass('selected');
       });
@@ -647,19 +666,13 @@
         optionsHover = false;
       });
 
-      $(window).on({
-        'click': function () {
-          multiple && (optionsHover || $newSelect.trigger('close'));
-        }
-      });
-
       // Add initial multiple selections.
       if (multiple) {
         $select.find("option:selected:not(:disabled)").each(function () {
-          var index = $(this).index();
+          var index = this.index;
 
           toggleEntryFromArray(valuesSelected, index, $select);
-          options.find("li").eq(index).find(":checkbox").prop("checked", true);
+          options.find("li:not(.optgroup)").eq(index).find(":checkbox").prop("checked", true);
         });
       }
 

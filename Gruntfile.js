@@ -9,6 +9,7 @@
 
 module.exports = function (grunt) {
 
+  var serveStatic = require('serve-static');
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -83,16 +84,16 @@ module.exports = function (grunt) {
           open: true,
           middleware: function (connect) {
             return [
-              connect.static('.tmp'),
+              serveStatic('.tmp'),
               connect().use(
                 '/bower_components',
-                connect.static('./bower_components')
+                serveStatic('./bower_components')
               ),
               connect().use(
                 '/app/styles',
-                connect.static('./app/styles')
+                serveStatic('./app/styles')
               ),
-              connect.static(appConfig.app)
+              serveStatic(appConfig.app)
             ];
           }
         }
@@ -102,13 +103,13 @@ module.exports = function (grunt) {
           port: 0, // Note: configure connect to choose a randomly available port
           middleware: function (connect) {
             return [
-              connect.static('.tmp'),
-              connect.static('test'),
+              serveStatic('.tmp'),
+              serveStatic('test'),
               connect().use(
                 '/bower_components',
-                connect.static('./bower_components')
+                serveStatic('./bower_components')
               ),
-              connect.static(appConfig.app)
+              serveStatic(appConfig.app)
             ];
           }
         }
@@ -144,8 +145,7 @@ module.exports = function (grunt) {
     // Make sure code styles are up to par
     jscs: {
       options: {
-        config: '.jscsrc',
-        verbose: true
+        config: '.jscsrc'
       },
       all: {
         src: [

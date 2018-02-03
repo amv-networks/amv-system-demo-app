@@ -23,7 +23,6 @@ module.exports = function(config) {
     files: [
       'test/phantomjsPolyfills.js',
       // bower:js
-      'bower_components/jquery/dist/jquery.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-aria/angular-aria.js',
@@ -31,7 +30,8 @@ module.exports = function(config) {
       'bower_components/angular-messages/angular-messages.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
-      'bower_components/Materialize/bin/materialize.js',
+      'bower_components/jquery/dist/jquery.js',
+      'bower_components/Materialize/dist/js/materialize.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
       'bower_components/angular-simple-logger/dist/angular-simple-logger.js',
       'bower_components/leaflet/dist/leaflet-src.js',

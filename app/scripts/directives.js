@@ -197,7 +197,7 @@ angular.module('amvSystemDemoUi')
     };
   }])
 
-  .directive('materializeTooltipped', ['$compile', '$timeout', function ($compile, $timeout) {
+  .directive('materializeTooltippedDisabled', ['$compile', '$timeout', function ($compile, $timeout) {
     return {
       restrict: 'A',
       link: function (scope, element, attrs) {
