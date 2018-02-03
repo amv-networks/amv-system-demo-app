@@ -22,6 +22,9 @@ angular
   .factory('Materialize', ['$window', function ($window) {
     return $window.Materialize;
   }])
+  .factory('jQuery', ['$window', function ($window) {
+    return $window.jQuery;
+  }])
   .factory('amvTrafficsoftRestJs', ['$window', function ($window) {
     return $window.amvTrafficsoftRestJs;
   }])

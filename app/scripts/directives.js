@@ -1,6 +1,13 @@
 'use strict';
 
 angular.module('amvSystemDemoUi')
+  .directive('initSidenavToggleButton', ['jQuery', function(jQuery) {
+    return {
+      controller: [function() {
+          jQuery('.button-collapse').sideNav();
+      }]
+    };
+  }])
   .directive('amvVehicleDetail', ['amvCanParams', 'amvStateParams', function (amvCanParams, amvStateParams) {
     return {
       transclude: true,
