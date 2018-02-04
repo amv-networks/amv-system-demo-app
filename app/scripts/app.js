@@ -80,8 +80,8 @@ angular
         options: {
           contractId: 1,
           auth: {
-            username: 'username',
-            password: 'password',
+            username: 'demo',
+            password: 'demo-password',
           }
         }
       },
@@ -282,29 +282,35 @@ angular
   }])
   .run(['$timeout', 'Materialize', 'amvSystemDemoUiSettings', function ($timeout, Materialize, amvSystemDemoUiSettings) {
 
-    Materialize.toast('Welcome to the amv System Demo Application.', 5000);
+    Materialize.toast('Welcome to the amv System Demo Application.', 2000);
 
     amvSystemDemoUiSettings.get()
       .then(settings => {
-        $timeout(() => {
-          if (settings.enableDemoMode) {
-            Materialize.toast('Demonstration mode is enabled. ', 5000);
-          }
-          $timeout(() => {
-            if (settings.enableStreamingUpdates) {
-              Materialize.toast('Streaming data is enabled. ', 5000);
-            }
-          }, 3000);
-        }, 3000);
-      })
-      .catch(() => {
-        $timeout(() => {
-          Materialize.toast('Demonstration mode is enabled. Play around!', 7000);
+        var settingsMessages = [];
+        var contractId = settings.api.options.contractId;
+        var username = settings.api.options.auth.username;
 
+        settingsMessages.push(['Using user \'' + username +'\' and contract #' + contractId, 5000]);
+
+        if (settings.app.vehicleIds) {
+         settingsMessages.push(['Vehicle filtering is enabled. ', 2000]);
+        }
+        if (settings.enableDemoMode) {
+          settingsMessages.push(['Demonstration mode is enabled. ', 2000]);
+        }
+        if (settings.enableStreamingUpdates) {
+          Materialize.toast('Streaming data is enabled. ', 2000);
+        }
+
+        var nextDelay = 2500;
+        settingsMessages.forEach(keyValuePair => {
           $timeout(() => {
-            Materialize.toast('... or adapt the application settings and use your own data :D', 8000);
-          }, 5000);
-        }, 2000);
+            var message = keyValuePair[0];
+            var displayTimeInMs = keyValuePair[1];
+            Materialize.toast(message, displayTimeInMs);
+          }, nextDelay);
+          nextDelay += 1000;
+        });
       });
   }])
   .controller('TopNavigationController', ['amvGitInfo', function (amvGitInfo) {
