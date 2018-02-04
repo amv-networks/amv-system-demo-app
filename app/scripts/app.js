@@ -1,8 +1,9 @@
 'use strict';
 
-var appendPrefixPreventingSubstitutionByGruntReplaceAndUglify = function (value) {
+var appendPrefixPreventingSubstitutionByGruntReplaceAndUglify = function(value) {
   return '@@' + value;
 };
+
 var variableNameThatShouldNotBeReplaced = appendPrefixPreventingSubstitutionByGruntReplaceAndUglify('___ENV_REPLACE_WORKAROUND___');
 var replaceTaskInvoked = variableNameThatShouldNotBeReplaced !== '@@___ENV_REPLACE_WORKAROUND___';
 
@@ -19,87 +20,16 @@ angular
     'knalli.angular-vertxbus',
     'js-data'
   ])
-  .factory('Materialize', ['$window', function ($window) {
-    return $window.Materialize;
-  }])
-  .factory('jQuery', ['$window', function ($window) {
-    return $window.jQuery;
-  }])
-  .factory('lodash', ['$window', function ($window) {
-    return $window._;
-  }])
-  .factory('amvTrafficsoftRestJs', ['$window', function ($window) {
-    return $window.amvTrafficsoftRestJs;
-  }])
-  .factory('DSLocalForageAdapter', ['$window', function ($window) {
-    return $window.DSLocalForageAdapter;
-  }])
-  .run(['DS', 'DSLocalForageAdapter', function (DS, DSLocalForageAdapter) {
+  .factory('Materialize', ['$window', $window => $window.Materialize])
+  .factory('jQuery', ['$window', $window => $window.jQuery])
+  .factory('lodash', ['$window', $window => $window._])
+  .factory('amvTrafficsoftRestJs', ['$window', $window => $window.amvTrafficsoftRestJs])
+  .factory('DSLocalForageAdapter', ['$window', $window => $window.DSLocalForageAdapter])
+  .run(['DS', 'DSLocalForageAdapter', (DS, DSLocalForageAdapter) => {
     var localForageAdapter = new DSLocalForageAdapter();
     DS.registerAdapter('localForage', localForageAdapter, {default: true});
   }])
-  .factory('SettingsResource', ['DS', function (DS) {
-    return DS.defineResource('SettingsResource');
-  }])
-  .factory('amvDemoVehicle', [function () {
-    var vehicleMoves = Math.random() >= 0.3 ? true : false;
-    var fuelLevel = Math.round(2 + Math.random() * 59);
-    var speed = Math.round((vehicleMoves ? Math.random() * 100 : 0) * 10) / 10;
-
-    return {
-      id: -1,
-      name: 'Demo Vehicle',
-      location: {
-        lat: Math.round((49.301369 + Math.random() / 100) * 1000000) / 1000000,
-        lng: Math.round((8.638769 + Math.random() / 100) * 1000000) / 1000000
-      },
-      provider: 'amv networks',
-      requestTime: Date.now(),
-      date: Date.now(),
-      data: {
-        speed: speed,
-        states: [{
-          param: 'vbat',
-          value: 12.3
-        }, {
-          param: 'move',
-          value: vehicleMoves ? 1 : 0
-        }, /*{
-         param: 'gsmt',
-         value: Math.round(5 + Math.random() * 25 * 10) / 10
-         }*/],
-        xfcds: [{
-          param: 'kmrd',
-          value: 1337
-        }, {
-          param: 'atmp',
-          value: Math.round(-5 + Math.random() * 40 * 10) / 10
-        }, {
-          param: 'fcon',
-          value: Math.round(Math.random() * 15 * 10) / 10
-        }, {
-          param: 'hbrk',
-          value: vehicleMoves ? 0 : (Math.random() > 0.5 ? 1 : 0)
-        }, {
-          param: 'wrlt',
-          value: (Math.random() > 0.1 ? 1 : 0)
-        }, {
-          param: 'flev',
-          value: Math.round(2 + Math.random() * 59)
-        }, {
-          param: 'chrp',
-          value: vehicleMoves ? 0 : (Math.random() > 0.5 ? 1 : 0)
-        }, {
-          param: 'range',
-          value: fuelLevel * 15
-        }, {
-          param: 'appe',
-          value: Math.min(100, Math.round(Math.random() * speed))
-        }]
-      }
-    };
-  }])
-
+  .factory('SettingsResource', ['DS', DS => DS.defineResource('SettingsResource')])
   .factory('amvApplicationInfo', [function () {
     if (replaceTaskInvoked) {
       return {
@@ -152,9 +82,11 @@ angular
           auth: {
             username: 'username',
             password: 'password',
-          },
-          vehicleIds: [1, 2, 3],
+          }
         }
+      },
+      app: {
+          vehicleIds: [],
       },
       enableDemoMode: true,
       enableStreamingUpdates: false,
@@ -163,87 +95,126 @@ angular
       debug: false
     };
   })
-  .factory('amvSystemDemoUiSettings', ['SettingsResource', 'amvSystemDemoUiSettingsTemplate', function (SettingsResource, amvSystemDemoUiSettingsTemplate) {
+  .factory('amvSystemDemoUiSettings', ['$log', 'lodash', 'SettingsResource', 'amvSystemDemoUiSettingsTemplate',
+    function ($log, lodash, SettingsResource, amvSystemDemoUiSettingsTemplate) {
     return {
-      get: function () {
-        return SettingsResource.findAll().then(function (settingsArray) {
+      get: () => SettingsResource.findAll()
+        .then(settingsArray => {
           if (settingsArray.length !== 1) {
             throw new Error('Cannot find settings.');
           } else {
-            var settings = _.defaults({}, settingsArray[0]);
-            return _.defaults(settings, amvSystemDemoUiSettingsTemplate);
+            var settings = lodash.defaults({}, settingsArray[0]);
+            return lodash.defaults(settings, amvSystemDemoUiSettingsTemplate);
           }
-        });
-      }
+        }).catch(e => {
+          $log.debug('Continue with default settings: ', e.message);
+          return amvSystemDemoUiSettingsTemplate;
+        })
     };
   }])
   .factory('amvTrafficsoftApiSettings', ['amvTrafficsoftRestJs', 'amvSystemDemoUiSettings', function (amvTrafficsoftRestJs, amvSystemDemoUiSettings) {
     return {
-      get: function () {
-        return amvSystemDemoUiSettings.get().then(function (settings) {
-          return settings.api;
-        });
-      }
+      get: () => amvSystemDemoUiSettings.get().then(settings => settings.api)
     };
   }])
   .factory('authContractId', ['amvTrafficsoftRestJs', 'amvSystemDemoUiSettings', function (amvTrafficsoftRestJs, amvSystemDemoUiSettings) {
     return {
-      get: function () {
-        return amvSystemDemoUiSettings.get().then(function (settings) {
-          return settings.api.options.contractId;
-        });
-      }
+      get: () => amvSystemDemoUiSettings.get()
+        .then(settings => settings.api.options.contractId)
     };
   }])
   .factory('amvClientFactory', ['amvTrafficsoftRestJs', 'amvTrafficsoftApiSettings', function (amvTrafficsoftRestJs, amvTrafficsoftApiSettings) {
     return {
-      get: function () {
-        return amvTrafficsoftApiSettings.get().then(function (apiSettings) {
-          return amvTrafficsoftRestJs(apiSettings.baseUrl, apiSettings.options);
-        });
-      }
+      get: () => amvTrafficsoftApiSettings.get()
+        .then(apiSettings => amvTrafficsoftRestJs(apiSettings.baseUrl, apiSettings.options))
     };
   }])
   .factory('amvXfcdClient', ['amvClientFactory', function (amvClientFactory) {
     return {
-      get: function () {
-        return amvClientFactory.get().then(function (factory) {
-          return factory.xfcd();
-        });
-      }
+      get: () => amvClientFactory.get().then(factory => factory.xfcd())
     };
   }])
   .factory('amvContractClient', ['amvClientFactory', function (amvClientFactory) {
     return {
-      get: function () {
-        return amvClientFactory.get().then(function (factory) {
-          return factory.contract();
-        });
-      }
+      get: () => amvClientFactory.get().then(factory => factory.contract())
     };
   }])
   .factory('amvVehicleIds', ['$log', 'amvContractClient', 'authContractId', 'amvDemoVehicle',
   function ($log, amvContractClient, authContractId, amvDemoVehicle) {
     return {
-      get: function () {
-        return amvContractClient.get().then(function (client) {
-            return authContractId.get().then(function(contractId) {
-                return client.fetchSubscriptions(contractId);
-            });
-          }).then(function(response) {
-              return response.data.subscriptions;
-          }).catch(function (e) {
+      get: () => amvContractClient.get().then(client => authContractId.get()
+          .then(contractId => client.fetchSubscriptions(contractId)))
+          .then(response => response.data.subscriptions)
+          .catch(e => {
             $log.warn('Error while fetching subscriptions.. continuing with demo subscriptions: ' + e.message);
             return [{
               vehicleId: amvDemoVehicle.id,
               from: '1970-01-01T12:00:00+01:00'
             }];
-          }).then(function(subscriptions) {
-              return (subscriptions || []).map(s => s.vehicleId);
-          });
+          })
+          .then(subscriptions => (subscriptions || []).map(s => s.vehicleId))
+      };
+  }])
+
+  .factory('amvDemoVehicle', [function () {
+    var vehicleMoves = Math.random() >= 0.3 ? true : false;
+    var fuelLevel = Math.round(2 + Math.random() * 59);
+    var speed = Math.round((vehicleMoves ? Math.random() * 100 : 0) * 10) / 10;
+
+    return {
+      id: 1,
+      name: 'Demo Vehicle',
+      location: {
+        lat: Math.round((49.301369 + Math.random() / 100) * 1000000) / 1000000,
+        lng: Math.round((8.638769 + Math.random() / 100) * 1000000) / 1000000
+      },
+      provider: 'amv networks',
+      requestTime: Date.now(),
+      date: Date.now(),
+      data: {
+        speed: speed,
+        states: [{
+          param: 'vbat',
+          value: 12.3
+        }, {
+          param: 'move',
+          value: vehicleMoves ? 1 : 0
+        }, /*{
+         param: 'gsmt',
+         value: Math.round(5 + Math.random() * 25 * 10) / 10
+         }*/],
+        xfcds: [{
+          param: 'kmrd',
+          value: 1337
+        }, {
+          param: 'atmp',
+          value: Math.round(-5 + Math.random() * 40 * 10) / 10
+        }, {
+          param: 'fcon',
+          value: Math.round(Math.random() * 15 * 10) / 10
+        }, {
+          param: 'hbrk',
+          value: vehicleMoves ? 0 : (Math.random() > 0.5 ? 1 : 0)
+        }, {
+          param: 'wrlt',
+          value: (Math.random() > 0.1 ? 1 : 0)
+        }, {
+          param: 'flev',
+          value: Math.round(2 + Math.random() * 59)
+        }, {
+          param: 'chrp',
+          value: vehicleMoves ? 0 : (Math.random() > 0.5 ? 1 : 0)
+        }, {
+          param: 'range',
+          value: fuelLevel * 15
+        }, {
+          param: 'appe',
+          value: Math.min(100, Math.round(Math.random() * speed))
+        }]
       }
     };
   }])
+
   .config(function (vertxEventBusProvider) {
     vertxEventBusProvider
       .enable()
@@ -289,7 +260,7 @@ angular
         controllerAs: 'vehicleDetail',
         resolve: {
           amvVehicleId: ['$stateParams', function ($stateParams) {
-            return $stateParams.id;
+            return parseInt($stateParams.id);
           }]
         }
       })
@@ -300,28 +271,37 @@ angular
         controllerAs: 'about'
       });
   }])
+  .run(['$timeout', '$rootScope', 'Materialize', function($timeout, $rootScope, Materialize) {
+    $rootScope.$on('$viewContentLoaded', function() {
+      $timeout(() => {
+        // fix for weird input field label behaviour
+        // https://github.com/InfomediaLtd/angular2-materialize/issues/131
+        Materialize.updateTextFields();
+      }, 100);
+    });
+  }])
   .run(['$timeout', 'Materialize', 'amvSystemDemoUiSettings', function ($timeout, Materialize, amvSystemDemoUiSettings) {
 
     Materialize.toast('Welcome to the amv System Demo Application.', 5000);
 
     amvSystemDemoUiSettings.get()
-      .then(function (settings) {
-        $timeout(function () {
+      .then(settings => {
+        $timeout(() => {
           if (settings.enableDemoMode) {
             Materialize.toast('Demonstration mode is enabled. ', 5000);
           }
-          $timeout(function () {
+          $timeout(() => {
             if (settings.enableStreamingUpdates) {
               Materialize.toast('Streaming data is enabled. ', 5000);
             }
           }, 3000);
         }, 3000);
       })
-      .catch(function () {
-        $timeout(function () {
+      .catch(() => {
+        $timeout(() => {
           Materialize.toast('Demonstration mode is enabled. Play around!', 7000);
 
-          $timeout(function () {
+          $timeout(() => {
             Materialize.toast('... or adapt the application settings and use your own data :D', 8000);
           }, 5000);
         }, 2000);

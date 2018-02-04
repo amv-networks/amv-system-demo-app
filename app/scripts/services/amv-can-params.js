@@ -6,17 +6,13 @@ angular.module('amvSystemDemoUi')
   'authContractId',
   function ($q, $log, amvContractClient, authContractId) {
     return {
-      get: function() {
-        return amvContractClient.get().then(function (client) {
-          return authContractId.get().then(function(contractId) {
-              return client.fetchDataPackage(contractId);
-          });
-        }).then(function (response) {
-          $log.log('ok, got data');
-          return response.data;
-        }).then(function(datapackage) {
-            return datapackage.params.xfcds;
-        });
+      get: () => {
+        return amvContractClient.get().then(client => authContractId.get()
+          .then(contractId => client.fetchDataPackage(contractId)))
+          .then(response => {
+            $log.log('ok, got data');
+            return response.data;
+          }).then(datapackage => datapackage.params.xfcds);
       }
     };
   }]);

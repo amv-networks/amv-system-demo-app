@@ -256,7 +256,7 @@ module.exports = function (grunt) {
         flow: {
           html: {
             steps: {
-              js: ['concat', 'uglifyjs'],
+              js: ['concat', /*'babel', 'uglifyjs'*/],
               css: ['cssmin']
             },
             post: {}
@@ -264,6 +264,18 @@ module.exports = function (grunt) {
         }
       }
     },
+    /*
+    babel: {
+      options: {
+        sourceMap: true,
+        presets: ['env']
+      },
+      dist: {
+        files: {
+          'dist/*.js': '.tmp/scripts/*.js'
+        }
+      }
+    },*/
 
     // Performs rewrites based on filerev and the useminPrepare configuration
     usemin: {
@@ -516,11 +528,12 @@ module.exports = function (grunt) {
     'postcss',
     'ngtemplates',
     'concat',
+    //'babel',
     'ngAnnotate',
     'copy:dist',
     //'cdnify',
     'cssmin',
-    'uglify',
+    //'uglify',
     'filerev',
     'usemin',
     'htmlmin',

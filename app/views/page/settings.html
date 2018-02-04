@@ -43,26 +43,6 @@
                        data-ng-model="settings.config.api.options.contractId">
                 <label class="active" for="contractId">ContractId</label>
               </div>
-
-              <h6>Vehicle Ids</h6>
-              <div class="chip" data-ng-repeat="vehicleId in settings.config.api.options.vehicleIds track by $index">
-                {{ vehicleId }}
-                <i class="material-icons"
-                   data-ng-click="settings.removeVehicleIdWithValue(vehicleId)"
-                   style="cursor: pointer;">close</i>
-              </div>
-              <div class="file-field input-field">
-                <div class="waves-effect waves-light btn right"
-                     data-ng-click="settings.addValueToVehicleIds(__newVehicleId); __newVehicleId = null;">
-                  Add
-                </div>
-                <div class="file-path-wrapper">
-                  <input id="__newVehicleId" type="number" class="validate"
-                         data-ng-model="__newVehicleId"
-                         data-ng-keyup="settings.onKeyUpOnNewVehicleIdInput($event, __newVehicleId)">
-                  <label class="active" for="__newVehicleId">Add VehicleId</label>
-                </div>
-              </div>
             </li>
           </ul>
 
@@ -70,6 +50,38 @@
           <h3 class="header light">Application Settings</h3>
 
           <ul class="collection">
+            <li class="collection-item">
+              <h6>Vehicle Ids</h6>
+              <p data-ng-if="settings.config.app.vehicleIds.length != 0">
+                Filtering is <strong class="green-text">enabled</strong>: Incoming data is filtered by
+                given vehicle ids.
+              </p>
+              <p data-ng-if="settings.config.app.vehicleIds.length == 0">
+                Filtering is <strong class="grey-text">disabled</strong>: All vehicles with valid
+                subscriptions are shown!
+              </p>
+              <div>
+                <div class="chip" data-ng-repeat="vehicleId in settings.config.app.vehicleIds track by $index">
+                  {{ vehicleId }}
+                  <i class="material-icons"
+                     data-ng-click="settings.removeVehicleIdWithValue(vehicleId)"
+                     style="cursor: pointer;">close</i>
+                </div>
+              </div>
+
+              <div class="file-field input-field">
+                <div class="waves-effect waves-light btn right"
+                     data-ng-click="settings.addValueToVehicleIds(__newVehicleId); __newVehicleId = null;">
+                  Add
+                </div>
+                <div class="file-path-wrapper">
+                  <input id="newVehicleId" type="number" class="validate"
+                         data-ng-model="__newVehicleId"
+                         data-ng-keyup="settings.onKeyUpOnNewVehicleIdInput($event, __newVehicleId)">
+                  <!--label class="active" for="newVehicleId">Add VehicleId</label-->
+                </div>
+              </div>
+            </li>
             <li class="collection-item" style="cursor: pointer;"
                 data-ng-class="{ 'grey lighten-3' : settings.optOut }"
                 data-ng-click="settings.config.enableDemoMode = !settings.config.enableDemoMode">

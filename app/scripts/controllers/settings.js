@@ -35,7 +35,7 @@ angular.module('amvSystemDemoUi')
 
       this.addValueToVehicleIds = function (newVehicleId) {
         if (newVehicleId && newVehicleId > 0) {
-          self.config.api.options.vehicleIds.push(newVehicleId);
+          self.config.app.vehicleIds.push(newVehicleId);
         }
       };
 
@@ -47,9 +47,9 @@ angular.module('amvSystemDemoUi')
       };
 
       this.removeVehicleIdWithValue = function (vehicleId) {
-        var index = self.config.api.options.vehicleIds.indexOf(vehicleId);
+        var index = self.config.app.vehicleIds.indexOf(vehicleId);
         if (index >= 0) {
-          self.config.api.options.vehicleIds.splice(index, 1);
+          self.config.app.vehicleIds.splice(index, 1);
         }
       };
     }]);
