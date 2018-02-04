@@ -41,6 +41,8 @@ angular.module('amvSystemDemoUi')
       });
 
       var createMarkerForVehicle = function (vehicle) {
+        var formattedRequestTime = moment(vehicle.requestTime).format();
+        var positionTimeFromNow = moment(vehicle.data.timestamp).fromNow();
 
         var markerMessage = '<div>' +
           '<h6>' + vehicle.name + '</h6>' +
@@ -57,8 +59,8 @@ angular.module('amvSystemDemoUi')
           '</span><br />' +
           //'<span>' + vehicle.condition.state + '</span><br />' +
           '<small><i class="material-icons tiny">router</i> Data Provider: ' + vehicle.provider + '</small><br />' +
-          '<small><i class="material-icons tiny">query_builder</i> Request Time: ' + vehicle.requestTime + '</small><br />' +
-          '<small><i class="material-icons tiny">query_builder</i> Position Time: ' + vehicle.data.timestamp + '</small>' +
+          '<small><i class="material-icons tiny">query_builder</i> Request Time: ' + formattedRequestTime + '</small><br />' +
+          '<small><i class="material-icons tiny">query_builder</i> Position Time: ' + positionTimeFromNow + '</small>' +
           '</div>';
 
         return {

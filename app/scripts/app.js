@@ -172,6 +172,7 @@ angular
       requestTime: Date.now(),
       date: Date.now(),
       data: {
+        timestamp: Date.now(),
         speed: speed,
         states: [{
           param: 'vbat',
