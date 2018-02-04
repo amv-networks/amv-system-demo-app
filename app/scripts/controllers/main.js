@@ -3,8 +3,8 @@
 
 angular.module('amvSystemDemoUi')
   .controller('MainCtrl', ['$scope', '$log', '$timeout',
-    'Materialize', 'amvSystemDemoUiSettings', 'amvXfcdClient', 'amvDemoVehicle',
-    function ($scope, $log, $timeout, Materialize, amvSystemDemoUiSettings, amvXfcdClient, amvDemoVehicle) {
+    'Materialize', 'amvSystemDemoUiSettings', 'amvXfcdClient', 'amvVehicleIds', 'amvDemoVehicle',
+    function ($scope, $log, $timeout, Materialize, amvSystemDemoUiSettings, amvXfcdClient, amvVehicleIds, amvDemoVehicle) {
       var self = this;
 
       this.map = {
@@ -196,66 +196,67 @@ angular.module('amvSystemDemoUi')
           addVehicle(amvDemoVehicle);
         };
 
-        amvSystemDemoUiSettings.get()
-          .catch(function (e) {
-            self.loading = false;
+        amvVehicleIds.get().then(function(vehicleIds) {
+          amvSystemDemoUiSettings.get()
+            .catch(function (e) {
+              self.loading = false;
 
-            addDemoVehicle();
+              addDemoVehicle();
 
-            $log.log(e);
-          })
-          .then(function (settings) {
-            self.settings = settings;
-
-            var apiSettings = settings.api || {};
-            var vehicleIds = apiSettings.options.vehicleIds || [];
-            var timeoutIntervalInMilliseconds = (settings.periodicUpdateIntervalInSeconds || 10) * 1000;
-
-            var runRecursive = settings.enablePeriodicUpdateInterval;
-
-            var onVehicleData = function (vehicleDataArray) {
-              removeMarkersFromMap();
-
-              removeAllVehicles();
-
-              if (settings.enableDemoMode) {
-                addDemoVehicle();
-              }
-
-              vehicleDataArray.forEach(function (data) {
-                var vehicle = apiResponseToVehicle(data);
-                addVehicle(vehicle);
-              });
-
-            };
-
-            var fetchMethod = runRecursive ? function () {
-              return invokeRecursiveFetchDataAndPopulateLocations(vehicleIds, onVehicleData, timeoutIntervalInMilliseconds);
-            } : function () {
-              return fetchDataAndPopulateLocations(vehicleIds, onVehicleData);
-            };
-
-            fetchMethod().then(function (data) {
-              if (data.length === 0) {
-                Materialize.toast('Response contains empty data!', 2000);
-              } else {
-                Materialize.toast('Finished loading ' + data.length + ' location(s)', 1000);
-              }
-            }).catch(function (e) {
-              if (settings.enableDemoMode) {
-                addDemoVehicle();
-                return;
-              }
-
-              $log.log('error, while getting data');
               $log.log(e);
+            })
+            .then(function (settings) {
+              self.settings = settings;
 
-              var isAmvException = e && e.response && e.response.data && e.response.data.message;
-              var errorMessage = isAmvException ? e.response.data.message : e;
-              Materialize.toast(errorMessage, 4000);
-              Materialize.toast('Please check your settings.', 5000);
+              //var apiSettings = settings.api || {};
+              //var vehicleIds = apiSettings.options.vehicleIds || []; <- vehicleIds from subscription!
+              var timeoutIntervalInMilliseconds = (settings.periodicUpdateIntervalInSeconds || 10) * 1000;
+
+              var runRecursive = settings.enablePeriodicUpdateInterval;
+
+              var onVehicleData = function (vehicleDataArray) {
+                removeMarkersFromMap();
+
+                removeAllVehicles();
+
+                if (settings.enableDemoMode) {
+                  addDemoVehicle();
+                }
+
+                vehicleDataArray.forEach(function (data) {
+                  var vehicle = apiResponseToVehicle(data);
+                  addVehicle(vehicle);
+                });
+
+              };
+
+              var fetchMethod = runRecursive ? function () {
+                return invokeRecursiveFetchDataAndPopulateLocations(vehicleIds, onVehicleData, timeoutIntervalInMilliseconds);
+              } : function () {
+                return fetchDataAndPopulateLocations(vehicleIds, onVehicleData);
+              };
+
+              fetchMethod().then(function (data) {
+                if (data.length === 0) {
+                  Materialize.toast('Response contains empty data!', 2000);
+                } else {
+                  Materialize.toast('Finished loading ' + data.length + ' location(s)', 1000);
+                }
+              }).catch(function (e) {
+                if (settings.enableDemoMode) {
+                  addDemoVehicle();
+                  return;
+                }
+
+                $log.log('error, while getting data');
+                $log.log(e);
+
+                var isAmvException = e && e.response && e.response.data && e.response.data.message;
+                var errorMessage = isAmvException ? e.response.data.message : e;
+                Materialize.toast(errorMessage, 4000);
+                Materialize.toast('Please check your settings.', 5000);
+              });
             });
           });
-
       })();
     }]);

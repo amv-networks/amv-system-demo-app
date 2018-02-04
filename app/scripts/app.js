@@ -25,6 +25,9 @@ angular
   .factory('jQuery', ['$window', function ($window) {
     return $window.jQuery;
   }])
+  .factory('lodash', ['$window', function ($window) {
+    return $window._;
+  }])
   .factory('amvTrafficsoftRestJs', ['$window', function ($window) {
     return $window.amvTrafficsoftRestJs;
   }])
@@ -216,6 +219,28 @@ angular
         return amvClientFactory.get().then(function (factory) {
           return factory.contract();
         });
+      }
+    };
+  }])
+  .factory('amvVehicleIds', ['$log', 'amvContractClient', 'authContractId', 'amvDemoVehicle',
+  function ($log, amvContractClient, authContractId, amvDemoVehicle) {
+    return {
+      get: function () {
+        return amvContractClient.get().then(function (client) {
+            return authContractId.get().then(function(contractId) {
+                return client.fetchSubscriptions(contractId);
+            });
+          }).then(function(response) {
+              return response.data.subscriptions;
+          }).catch(function (e) {
+            $log.warn('Error while fetching subscriptions.. continuing with demo subscriptions: ' + e.message);
+            return [{
+              vehicleId: amvDemoVehicle.id,
+              from: '1970-01-01T12:00:00+01:00'
+            }];
+          }).then(function(subscriptions) {
+              return (subscriptions || []).map(s => s.vehicleId);
+          });
       }
     };
   }])
