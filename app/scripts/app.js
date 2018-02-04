@@ -293,7 +293,7 @@ angular
 
         settingsMessages.push(['Using user \'' + username +'\' and contract #' + contractId, 5000]);
 
-        if (settings.app.vehicleIds) {
+        if (settings.app.vehicleIds.length > 0) {
          settingsMessages.push(['Vehicle filtering is enabled. ', 2000]);
         }
         if (settings.enableDemoMode) {
