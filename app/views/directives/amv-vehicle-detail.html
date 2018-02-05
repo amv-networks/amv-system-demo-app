@@ -40,7 +40,10 @@
   <div class="col s12 m12 l12">
     <h5>STATE params</h5>
 
-    <table>
+    <div class="card-panel amber lighten-5" data-ng-if="ctrl.model.vehicle.data.states.length <= 0">
+      No states params present.
+    </div>
+    <table data-ng-if="ctrl.model.vehicle.data.states.length > 0">
       <thead>
       <tr>
         <th>param</th>
@@ -49,9 +52,7 @@
       </thead>
 
       <tbody>
-      <tr data-ng-repeat="state in ctrl.model.vehicle.data.states | filter:filterStateParamInput"
-          data-ng-show-DISABLED="!!ctrl.stateParamsMap[state.param]">
-        <!--td>{{ ctrl.canParamsMap[xfcd.param].code }}</td-->
+      <tr data-ng-repeat="state in ctrl.model.vehicle.data.states">
         <td>
           <span data-materialize-tooltipped data-delay="50"
                 data-tooltip="{{ ctrl.stateParamsMap[state.code].description || 'No info.' }}">
@@ -60,7 +61,6 @@
         </td>
         <td>
           <span>{{ state.value }}</span>
-          <!--span>{{ ctrl.stateParamsMap[state.param].UNIT }}</span-->
         </td>
       </tr>
       </tbody>
@@ -71,7 +71,10 @@
   <div class="col s12 m12 l12">
     <h5>XFCD params</h5>
 
-    <table>
+    <div class="card-panel amber lighten-5" data-ng-if="ctrl.model.vehicle.data.xfcds.length <= 0">
+      No xfcd params present.
+    </div>
+    <table data-ng-if="ctrl.model.vehicle.data.xfcds.length > 0">
       <thead>
       <tr>
         <th>param</th>
@@ -80,25 +83,19 @@
       </thead>
 
       <tbody>
-      <tr data-ng-repeat="xfcd in ctrl.model.vehicle.data.xfcds | filter:filterXfcdParamInput"
-          data-ng-show-DISABLED="!!ctrl.canParamsMap[xfcd.param]">
-        <!--td>{{ ctrl.canParamsMap[xfcd.param].code }}</td-->
+      <tr data-ng-repeat="xfcd in ctrl.model.vehicle.data.xfcds">
         <td>
-          <span data-materialize-tooltipped data-delay="50"
-                data-tooltip="{{ ctrl.canParamsMap[xfcd.param].description || 'No info.' }}">
+          <span>
             {{ xfcd.param }}
           </span>
         </td>
         <td>
           <span>{{ xfcd.value }}</span>
-          <!--span>{{ ctrl.canParamsMap[xfcd.param].UNIT }}</span-->
         </td>
-        <!--td>{{ canParam.DESCEN }}</td>
-        <td>{{ canParam.UNIT }}</td>
-        <td>{{ canParam.DATATYPE }}</td-->
       </tr>
       </tbody>
     </table>
+
   </div>
 </div>
 
