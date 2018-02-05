@@ -173,7 +173,7 @@ angular
                  }
                  return vehicleIds;
              })
-             .then(vehicleIds => vehicleIds.slice(0, MAX_VEHICLE_IDS))
+             .then(vehicleIds => vehicleIds.slice(0, MAX_VEHICLE_IDS));
         })
       };
   }])
