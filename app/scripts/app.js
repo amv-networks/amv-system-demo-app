@@ -7,6 +7,10 @@ var appendPrefixPreventingSubstitutionByGruntReplaceAndUglify = function(value) 
 var variableNameThatShouldNotBeReplaced = appendPrefixPreventingSubstitutionByGruntReplaceAndUglify('___ENV_REPLACE_WORKAROUND___');
 var replaceTaskInvoked = variableNameThatShouldNotBeReplaced !== '@@___ENV_REPLACE_WORKAROUND___';
 
+var copyArray = function(array) {
+  return (array || []).slice(0);
+};
+
 angular
   .module('amvSystemDemoUi', [
     'ngAnimate',
@@ -139,20 +143,38 @@ angular
       get: () => amvClientFactory.get().then(factory => factory.contract())
     };
   }])
-  .factory('amvVehicleIds', ['$log', 'amvContractClient', 'authContractId', 'amvDemoVehicle',
-  function ($log, amvContractClient, authContractId, amvDemoVehicle) {
+  .factory('amvVehicleIds', ['$log', 'amvSystemDemoUiSettings', 'amvContractClient', 'authContractId', 'amvDemoVehicle',
+  function ($log, amvSystemDemoUiSettings, amvContractClient, authContractId, amvDemoVehicle) {
+    var MAX_VEHICLE_IDS = 10;
+
     return {
-      get: () => amvContractClient.get().then(client => authContractId.get()
-          .then(contractId => client.fetchSubscriptions(contractId)))
-          .then(response => response.data.subscriptions)
-          .catch(e => {
-            $log.warn('Error while fetching subscriptions.. continuing with demo subscriptions: ' + e.message);
-            return [{
-              vehicleId: amvDemoVehicle.id,
-              from: '1970-01-01T12:00:00+01:00'
-            }];
-          })
-          .then(subscriptions => (subscriptions || []).map(s => s.vehicleId))
+      get: () => amvSystemDemoUiSettings.get()
+       .then(settings => settings.app)
+       .then(appSettings => appSettings.vehicleIds)
+       .then(vehicleIdsSettings => {
+           var filteringEnabled = vehicleIdsSettings.length > 0;
+           var vehicleIdsFilter = copyArray(vehicleIdsSettings);
+
+           return amvContractClient.get().then(client => authContractId.get()
+             .then(contractId => client.fetchSubscriptions(contractId)))
+             .then(response => response.data.subscriptions)
+             .catch(e => {
+               $log.warn('Error while fetching subscriptions.. continuing with demo subscriptions: ' + e.message);
+               return [{
+                 vehicleId: amvDemoVehicle.id,
+                 from: '1970-01-01T12:00:00+01:00'
+               }];
+             })
+             .then(subscriptions => (subscriptions || []).map(s => s.vehicleId))
+             .then(vehicleIds => {
+                 if (filteringEnabled) {
+                     vehicleIdsFilter.push(amvDemoVehicle.id);
+                     return vehicleIds.filter(vehicleId => vehicleIdsFilter.indexOf(vehicleId) >= 0);
+                 }
+                 return vehicleIds;
+             })
+             .then(vehicleIds => vehicleIds.slice(0, MAX_VEHICLE_IDS))
+        })
       };
   }])
 
