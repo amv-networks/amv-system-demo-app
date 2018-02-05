@@ -79,7 +79,7 @@ angular.module('amvSystemDemoUi')
           });
         };
 
-        self.demoMode = amvVehicleId === amvDemoVehicle.id; //amvDemoVehicle.id;
+        self.demoMode = amvVehicleId === amvDemoVehicle.id;
 
         amvSystemDemoUiSettings.get()
           .catch(function (e) {

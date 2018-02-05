@@ -11,6 +11,10 @@
   clear: both;
 }
 
+html {
+  font-family: Calibri, Trebuchet, Arial, sans-serif;
+}
+
 /**
 * Project Specfic
 */
