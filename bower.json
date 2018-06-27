@@ -21,7 +21,7 @@
     "angular-ui-router": "1.0.14",
     "ui-leaflet": "1.0.3",
     "angular-vertxbus": "6.1.1",
-    "amv-trafficsoft-rest-js": "amvnetworks/amv-trafficsoft-rest-js#v0.2.0",
+    "amv-trafficsoft-rest-js": "amvnetworks/amv-trafficsoft-rest-js#v0.3.0",
     "js-data-angular": "3.2.1",
     "js-data": "2.10.0",
     "js-data-localforage": "2.1.1",
