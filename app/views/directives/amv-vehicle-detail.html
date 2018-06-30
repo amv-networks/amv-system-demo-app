@@ -97,6 +97,68 @@
     </table>
 
   </div>
+
+  
+  <div class="col s12 m12 l12">
+      <h5>Reservations</h5>
+        
+      <div class="card-panel amber lighten-5" data-ng-if="ctrl.model.vehicle.reservations.length <= 0">
+        No reservations present.
+      </div>
+  
+      <a class="btn disabled">Create new reservation</a>
+  
+      <table data-ng-if="ctrl.model.vehicle.reservations.length > 0">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>type</th>
+          <th>from</th>
+          <th>until</th>
+          <th>data</th>
+          <th>actions</th>
+        </tr>
+        </thead>
+  
+        <tbody>
+        <tr data-ng-repeat="reservation in ctrl.model.vehicle.reservations">
+          <td>
+            <span>
+              {{ reservation.reservationId }}
+            </span>
+          </td>
+          <td>
+            <span data-ng-if="!!reservation.rfid" class="new badge blue">RFID</span>
+            <span data-ng-if="!!reservation.btle" class="new badge">BTLE</span>
+          </td>
+          <td>
+            {{ reservation.from }}
+          </td>
+          <td>
+            {{ reservation.until }}
+          </td>
+          <td>
+            <div data-ng-if="!!reservation.rfid">
+              <ul>
+                <li><b>driverTagId</b>: {{ reservation.rfid.driverTagId }}</li>
+              </ul>
+            </div>
+            <div data-ng-if="!!reservation.btle">
+              <ul>
+                <li><b>accessCertificateId</b>: {{ reservation.btle.accessCertificateId }}</li>
+                <li><b>appId</b>: {{ reservation.btle.appId }}</li>
+                <li><b>mobileSerialNumber</b>: {{ reservation.btle.mobileSerialNumber }}</li>
+              </ul>
+            </div>
+          </td>
+          <td>
+              <a class="btn waves-effect waves-light red disabled">delete</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  
 </div>
 
 </div>

@@ -129,13 +129,26 @@ angular
   }])
   .factory('amvClientFactory', ['amvTrafficsoftRestJs', 'amvTrafficsoftApiSettings', function (amvTrafficsoftRestJs, amvTrafficsoftApiSettings) {
     return {
-      get: () => amvTrafficsoftApiSettings.get()
-        .then(apiSettings => amvTrafficsoftRestJs(apiSettings.baseUrl, apiSettings.options))
+      get: () => {
+        return amvTrafficsoftApiSettings.get()
+        .then(apiSettings => {
+          return amvTrafficsoftRestJs(apiSettings.baseUrl, apiSettings.options);
+        });
+      }
     };
   }])
   .factory('amvXfcdClient', ['amvClientFactory', function (amvClientFactory) {
     return {
-      get: () => amvClientFactory.get().then(factory => factory.xfcd())
+      get: () => {
+        return amvClientFactory.get().then(factory => factory.xfcd());
+      }
+  };
+  }])
+  .factory('carSharingReservationClient', ['amvClientFactory', function (amvClientFactory) {
+    return {
+      get: () => amvClientFactory.get().then(factory => {
+        return factory.carSharingReservation();
+      })
     };
   }])
   .factory('amvContractClient', ['amvClientFactory', function (amvClientFactory) {
@@ -179,12 +192,13 @@ angular
   }])
 
   .factory('amvDemoVehicle', [function () {
+    var vehicleId = 1;
     var vehicleMoves = Math.random() >= 0.3 ? true : false;
     var fuelLevel = Math.round(2 + Math.random() * 59);
     var speed = Math.round((vehicleMoves ? Math.random() * 100 : 0) * 10) / 10;
 
     return {
-      id: 1,
+      id: vehicleId,
       name: 'Demo Vehicle',
       location: {
         lat: Math.round((49.301369 + Math.random() / 100) * 1000000) / 1000000,
@@ -193,6 +207,25 @@ angular
       provider: 'amv networks',
       requestTime: Date.now(),
       date: Date.now(),
+      reservations: [{
+          'reservationId': 1,
+          'vehicleId': vehicleId,
+          'from': '2018-06-30T18:22:37.732Z',
+          'until': '2018-06-30T18:22:37.732Z',
+          'rfid': {
+            'driverTagId': '0123456789abcdef'
+          },
+        }, {
+          'reservationId': 2,
+          'vehicleId': vehicleId,
+          'from': '2018-06-30T18:22:37.732Z',
+          'until': '2018-06-30T18:22:37.732Z',
+          'btle': {
+            'accessCertificateId': 'string',
+            'appId': 'string',
+            'mobileSerialNumber': 'string'
+          },
+        }],
       data: {
         timestamp: Date.now(),
         speed: speed,

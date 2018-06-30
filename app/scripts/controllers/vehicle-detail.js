@@ -3,8 +3,11 @@
 
 angular.module('amvSystemDemoUi')
   .controller('VehicleDetailCtrl', ['$scope', '$log', '$timeout',
-    'Materialize', 'amvSystemDemoUiSettings', 'amvXfcdClient', 'amvDemoVehicle', 'amvVehicleId',
-    function ($scope, $log, $timeout, Materialize, amvSystemDemoUiSettings, amvXfcdClient, amvDemoVehicle, amvVehicleId) {
+    'Materialize', 'amvSystemDemoUiSettings', 
+    'amvXfcdClient', 'carSharingReservationClient',
+    'amvDemoVehicle', 'amvVehicleId',
+    function ($scope, $log, $timeout, Materialize, amvSystemDemoUiSettings, 
+      amvXfcdClient, carSharingReservationClient, amvDemoVehicle, amvVehicleId) {
       var self = this;
 
       if (!amvVehicleId) {
@@ -15,7 +18,7 @@ angular.module('amvSystemDemoUi')
         return;
       }
 
-      function apiResponseToVehicle(data) {
+      function apiXfcdResponseToVehicle(data) {
         return {
           id: data.id,
           name: data.name || data.id,
@@ -42,28 +45,48 @@ angular.module('amvSystemDemoUi')
         var fetchData = function (vehicleIds) {
           self.loading = true;
 
-          return amvXfcdClient.get().then(function (client) {
-            return client.getLastData(vehicleIds);
-          }).then(function (response) {
-            $log.log('ok, got data');
-
+          var reservationsPromise = carSharingReservationClient.get().then(function(client) {
+            return client.fetchReservations(vehicleIds);
+          }).then(function(response) {
             var hasData = !!response.data && response.data.length > 0;
             if (!hasData) {
               return [];
             }
             return response.data;
-          }).finally(function () {
-            self.loading = false;
           });
+
+          var latstDataPromise = amvXfcdClient.get().then(function (client) {
+            return client.getLastData(vehicleIds);
+          }).then(function (response) {
+            var hasData = !!response.data && response.data.length > 0;
+            if (!hasData) {
+              return [];
+            }
+            return response.data;
+          });
+
+          return Promise.all(latstDataPromise, reservationsPromise)
+            .then(dataArray => {
+              var lastData = dataArray[0] || [];
+              var reservations = dataArray[1] || [];
+
+              return {
+                xfcd: lastData,
+                reservations: reservations
+              };
+            })
+            .finally(function () {
+              self.loading = false;
+            });
         };
 
 
         var fetchDataAndPopulateLocations = function (vehicleIds, onVehicleData) {
-          return fetchData(vehicleIds).then(function (dataArray) {
-            if (dataArray && dataArray.length > 0) {
-              onVehicleData(dataArray);
+          return fetchData(vehicleIds).then(function (data) {
+            if (data) {
+              onVehicleData(data);
             }
-            return dataArray;
+            return data;
           });
         };
 
@@ -100,10 +123,15 @@ angular.module('amvSystemDemoUi')
             var onVehicleData = function (vehicleData) {
               self.vehicles = [];
 
-              vehicleData.forEach(function (data) {
-                var vehicle = apiResponseToVehicle(data);
-                self.vehicles.push(vehicle);
-              });
+              var reservations = vehicleData.reservations;
+              var xfcd = vehicleData.xfcd;
+              if (xfcd && xfcd.length > 0) {
+                xfcd.forEach(function (xfcdEntry) {
+                  var vehicle = apiXfcdResponseToVehicle(xfcdEntry);
+                  vehicle.reservations = reservations;
+                  self.vehicles.push(vehicle);
+                });
+              }
             };
 
             var runRecursive = settings.enablePeriodicUpdateInterval;
