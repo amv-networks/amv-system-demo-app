@@ -22,6 +22,11 @@
 
         <i class="material-icons tiny">av_timer</i> speed: {{ (ctrl.model.vehicle.data.speed || 0) }} km/h
 
+        <br />
+        
+        <a class="btn waves-effect waves-light" 
+           data-ui-sref="vehicle_reservation({id: ctrl.model.vehicle.id})"
+           data-ng-if="ctrl.model.vehicle.id !== 1">View reservations</a>
       </div>
     </div>
 
@@ -54,10 +59,10 @@
       <tbody>
       <tr data-ng-repeat="state in ctrl.model.vehicle.data.states">
         <td>
-          <span data-materialize-tooltipped data-delay="50"
+          <code data-materialize-tooltipped data-delay="50"
                 data-tooltip="{{ ctrl.stateParamsMap[state.code].description || 'No info.' }}">
             {{ state.param }}
-          </span>
+          </code>
         </td>
         <td>
           <span>{{ state.value }}</span>
@@ -85,9 +90,9 @@
       <tbody>
       <tr data-ng-repeat="xfcd in ctrl.model.vehicle.data.xfcds">
         <td>
-          <span>
+          <code>
             {{ xfcd.param }}
-          </span>
+          </code>
         </td>
         <td>
           <span>{{ xfcd.value }}</span>
@@ -97,6 +102,9 @@
     </table>
 
   </div>
+
+  <div style="margin: 3em">&nbsp;</div>
+  
 </div>
 
 </div>

@@ -1,0 +1,97 @@
+<div class="progress amber" style="margin: 0;" data-ng-show="vehicleReservation.loading">
+  <div class="indeterminate amber lighten-4"></div>
+</div>
+
+<div class="row" style="margin-bottom: 0;">
+  <div class="container">
+    
+    <div class="col s12 m12 l12">
+      <a class="btn waves-effect waves-light" data-ui-sref="vehicle({id: vehicleReservation.model.vehicleId})">Back to vehicle details</a>
+    </div>
+
+    <div data-ng-if="vehicleReservation.error">
+      <h2>There has been an error :(</h2>
+      <p>{{ vehicleReservation.error.message }}</p>
+      <p data-ng-if="vehicleReservation.error.exception">{{ vehicleReservation.error.exception }}</p>
+      <pre>{{ vehicleReservation.error | json}}</pre>
+    </div>
+
+    <div class="col s12 m12 l12">
+      <h5>Reservations</h5>
+
+      <div class="card-panel amber lighten-5" data-ng-if="!vehicleReservation.loading && vehicleReservation.reservations.length <= 0">
+        No reservations present.
+      </div>
+
+      <a class="btn disabled">Create new reservation</a>
+
+      <table data-ng-if="vehicleReservation.reservations.length > 0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th style="text-align: center">type</th>
+            <th>from</th>
+            <th>until</th>
+            <th>data</th>
+            <th style="text-align: center">actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr data-ng-repeat="reservation in vehicleReservation.reservations">
+            <td>
+              <span>
+                {{ reservation.reservationId }}
+              </span>
+            </td>
+            <td style="text-align: center">
+              <span data-ng-if="!!reservation.rfid" class="new badge blue" data-badge-caption="" style="float: none; margin: 0;">RFID</span>
+              <span data-ng-if="!!reservation.btle" class="new badge" data-badge-caption="" style="float: none; margin: 0;">BTLE</span>
+            </td>
+            <td>
+              {{ reservation.from }}
+            </td>
+            <td>
+              {{ reservation.until }}
+            </td>
+            <td>
+              <div data-ng-if="!!reservation.rfid">
+                <ul>
+                  <li>
+                    <b>driverTagId</b>: {{ reservation.rfid.driverTagId }}</li>
+                </ul>
+              </div>
+              <div data-ng-if="!!reservation.btle">
+                <ul>
+                  <li>
+                    <b>accessCertificateId</b>: {{ reservation.btle.accessCertificateId }}</li>
+                  <li>
+                    <b>appId</b>: {{ reservation.btle.appId }}</li>
+                  <li>
+                    <b>mobileSerialNumber</b>: {{ reservation.btle.mobileSerialNumber }}</li>
+                </ul>
+              </div>
+            </td>
+            <td style="text-align: center">
+              <button class="waves-effect waves-light red btn" data-ng-click="vehicleReservation.onClickCancelReservation(reservation)">cancel</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin: 3em">&nbsp;</div>
+
+      <div id="modal-cancel-reservation" class="modal">
+        <div class="modal-content">
+          <h4>Cancel Reservation</h4>
+          <p>Are you sure you want to cancel reservation {{ vehicleReservation.currentReservation.reservationId }}?</p>
+          <pre>{{ vehicleReservation.currentReservation | json }}</pre>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-close waves-effect waves-green btn-flat">No</a>
+            <a class="modal-close waves-effect waves-green btn-flat" data-ng-click="vehicleReservation.onClickCancelReservationConfirmed(vehicleReservation.currentReservation)">Yes</a>
+        </div>
+      </div>
+  </div>
+</div>

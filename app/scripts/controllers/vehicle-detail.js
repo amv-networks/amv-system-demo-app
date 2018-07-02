@@ -2,9 +2,12 @@
 'use strict';
 
 angular.module('amvSystemDemoUi')
-  .controller('VehicleDetailCtrl', ['$scope', '$log', '$timeout',
-    'Materialize', 'amvSystemDemoUiSettings', 'amvXfcdClient', 'amvDemoVehicle', 'amvVehicleId',
-    function ($scope, $log, $timeout, Materialize, amvSystemDemoUiSettings, amvXfcdClient, amvDemoVehicle, amvVehicleId) {
+  .controller('VehicleDetailCtrl', ['$scope', '$log', '$timeout', '$q',
+    'Materialize', 'amvSystemDemoUiSettings', 
+    'amvXfcdClient', 
+    'amvDemoVehicle', 'amvVehicleId',
+    function ($scope, $log, $timeout, $q, Materialize, amvSystemDemoUiSettings, 
+      amvXfcdClient, amvDemoVehicle, amvVehicleId) {
       var self = this;
 
       if (!amvVehicleId) {
@@ -14,8 +17,8 @@ angular.module('amvSystemDemoUi')
         };
         return;
       }
-
-      function apiResponseToVehicle(data) {
+      
+      function apiXfcdResponseToVehicle(data) {
         return {
           id: data.id,
           name: data.name || data.id,
@@ -42,28 +45,36 @@ angular.module('amvSystemDemoUi')
         var fetchData = function (vehicleIds) {
           self.loading = true;
 
-          return amvXfcdClient.get().then(function (client) {
+          var latestDataPromise = amvXfcdClient.get().then(function (client) {
             return client.getLastData(vehicleIds);
           }).then(function (response) {
-            $log.log('ok, got data');
-
             var hasData = !!response.data && response.data.length > 0;
             if (!hasData) {
               return [];
             }
             return response.data;
-          }).finally(function () {
-            self.loading = false;
           });
+
+          return $q.all([latestDataPromise])
+            .then(dataArray => {
+              var lastData = dataArray[0] || [];
+
+              return {
+                xfcd: lastData,
+              };
+            })
+            .finally(function () {
+                self.loading = false;
+            });
         };
 
 
         var fetchDataAndPopulateLocations = function (vehicleIds, onVehicleData) {
-          return fetchData(vehicleIds).then(function (dataArray) {
-            if (dataArray && dataArray.length > 0) {
-              onVehicleData(dataArray);
+          return fetchData(vehicleIds).then(function (data) {
+            if (data) {
+              onVehicleData(data);
             }
-            return dataArray;
+            return data;
           });
         };
 
@@ -100,10 +111,13 @@ angular.module('amvSystemDemoUi')
             var onVehicleData = function (vehicleData) {
               self.vehicles = [];
 
-              vehicleData.forEach(function (data) {
-                var vehicle = apiResponseToVehicle(data);
-                self.vehicles.push(vehicle);
-              });
+              var xfcd = vehicleData.xfcd;
+              if (xfcd && xfcd.length > 0) {
+                xfcd.forEach(function (xfcdEntry) {
+                  var vehicle = apiXfcdResponseToVehicle(xfcdEntry);
+                  self.vehicles.push(vehicle);
+                });
+              }
             };
 
             var runRecursive = settings.enablePeriodicUpdateInterval;

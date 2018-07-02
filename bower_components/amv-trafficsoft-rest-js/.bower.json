@@ -19,14 +19,14 @@
     "!LICENSE",
     "!NOTICE"
   ],
-  "version": "0.2.0",
-  "_release": "0.2.0",
+  "version": "0.3.0",
+  "_release": "0.3.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.2.0",
-    "commit": "3e5a37b7f2a899f6fec2f6a90ba16ca2ab77ef91"
+    "tag": "v0.3.0",
+    "commit": "4b9bbb135f660a7f566cb257a3eaee556449ec37"
   },
   "_source": "https://github.com/amvnetworks/amv-trafficsoft-rest-js.git",
-  "_target": "v0.2.0",
+  "_target": "v0.3.0",
   "_originalSource": "amvnetworks/amv-trafficsoft-rest-js"
 }
