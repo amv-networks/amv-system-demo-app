@@ -27,6 +27,24 @@ angular.module('amvSystemDemoUi')
         self.model.positionTime = moment(vehicle.data.timestamp);
         self.model.positionTimeFromNow = moment(vehicle.data.timestamp).fromNow();
 
+        if(self.model.vehicle.data) {
+          if(self.model.vehicle.data.states) {
+            self.model.vehicle.data.states.forEach(state => {
+              if(state.timestamp) {
+                state.timestampFromNow =  moment(state.timestamp).fromNow();
+              }
+            });
+          }
+          if(self.model.vehicle.data.xfcds) {
+            self.model.vehicle.data.xfcds.forEach(xfcd => {
+              if(xfcd.timestamp) {
+                xfcd.timestampFromNow =  moment(xfcd.timestamp).fromNow();
+              }
+            });
+          }
+        }
+
+
         amvCanParams.get().then(function (response) {
           self.canParamsMap = _.keyBy(response, 'code');
         });
